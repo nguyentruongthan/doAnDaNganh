@@ -2,9 +2,10 @@ import mqtt from 'mqtt';
 
 class MQTTClient {
   constructor(brokerUrl, username, password, topics) {
+    password = password.replace(/#/g, '');
     this.client = mqtt.connect(brokerUrl, {
       username: username,
-      password: password
+      password: password,
     });
 
     this.client.on('connect', () => {
