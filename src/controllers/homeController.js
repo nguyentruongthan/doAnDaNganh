@@ -1,4 +1,6 @@
-import Service from '../services/service.js';
+import Service from '../services/service.js'; 
+
+
 let getHomePage = async (req, res) => {
   try {
     return res.render('homePage.ejs', {
