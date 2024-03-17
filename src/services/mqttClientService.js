@@ -1,6 +1,11 @@
 import mqtt from 'mqtt';
 import db from '../models/index.js';
 
+const brokerUrl = 'mqtt://io.adafruit.com';
+const username = 'nguyentruongthan';
+const password = 'aio_vuMN25byK98NvxriL7############7hAfLe5KyK';
+const topics = ['tempurature', 'humidityair', 'light', 'nutnhan1', 'nutnhan2'];
+
 class MQTTClient {
   constructor(brokerUrl, username, password, topics) {
     password = password.replace(/#/g, '');
@@ -28,14 +33,20 @@ class MQTTClient {
         case 'tempurature':
           // Lưu dữ liệu vào database
           await db.Temp.create({ value: message.toString() });
+          // Send data to client through socket.io
+          _io.emit('temp data', message.toString());
           break;
-        case 'humidity':
-          await db.Humi.create({ value: message.toString() });
+        case 'humidityair':
           // Lưu dữ liệu vào database
+          await db.HumiAir.create({ value: message.toString() });
+          // Send data to client through socket.io
+          _io.emit('humi data', message.toString());
           break;
         case 'light':
-          await db.Light.create({ value: message.toString() });
           // Lưu dữ liệu vào database
+          await db.Light.create({ value: message.toString() });
+          // Send data to client through socket.io
+          _io.emit('light data', message.toString());
           break;
         case 'nutnhan1':
           // Lưu dữ liệu vào database
@@ -46,6 +57,7 @@ class MQTTClient {
         default:
           break;
       }
+      
      
     });
 
@@ -54,5 +66,8 @@ class MQTTClient {
     });
   }
 }
+const mqttClient = new MQTTClient(brokerUrl, username, password, topics);
 
-export default MQTTClient;
+module.exports = {
+  mqttClient: mqttClient,
+};
