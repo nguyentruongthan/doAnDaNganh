@@ -4,8 +4,8 @@ import constant from '../services/constant';
 
 const brokerUrl = 'mqtt://mqtt.ohstem.vn';
 const mqttName = 'nguyentruongthan';
-const password = 'aio_vuMN25byK98NvxriL7############7hAfLe5KyK'; //khong su dung neu dung ohstem
-// const topics = ["farm1"];
+const password = ''; 
+
 
 class MQTTClient {
   publish(topic, message) {
