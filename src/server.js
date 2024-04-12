@@ -20,12 +20,12 @@ app.use(bodyParser.urlencoded({ extended: true }))
 viewEngine(app);
 initWebRoutes(app);
 
-connectDB();
+// connectDB();
 global._io.on('connection',
   SocketServices.connection)
 
 let port = process.env.PORT || 6969;
 
 server.listen(port, () => {
-  console.log("Backend NodeJS is running on the port: " + port);
+  console.log(`Server running at: http://localhost:${port}`);
 });

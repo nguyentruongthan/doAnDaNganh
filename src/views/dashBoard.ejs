@@ -14,30 +14,70 @@
     crossorigin="anonymous"></script>
     
 </head>
-<body>
-  <h1 id="temp">Temp: <%= data.temp.value%>°C</h1>
-  <h1 id="humi">Humi: <%= data.humiAir.value%>%</h1>
-  <h1 id="light">Light: <%= data.light.value%>Lux</h1>
+<body
+  style="width: 100vw; height: 100vh; overflow-x: hidden;">
+  <div class="col-6 mt-5">
+    <table class="table" id="devices">
+      <tr>
+        <th scope="col">Tên thiết bị</th>
+        <th scope="col">Pin</th>
+        <th scope="col">Giá trị</th>
+      </tr>
+      <% for(let i = 0; i < data.length; i++) { %>
+        <tr class="device">
+          <th class="name"> <%= data[i].deviceName %></th>
+          
+          <% if(data[i].type == "3" || data[i].type == "4" ) {%>
+            <th class="pinOutput"> <%= data[i].pin %></th>
+            <th> 
+              <div class="form-check form-switch">
+                <input class="form-check-input valueOutput" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+              </div>
+            </th>
+          <%} else {%>
+            <th class="pinSensor"> <%= data[i].pin %></th>
+            <th class="valueSensor"> <%= data[i].value %></th>
+          <%}%>
+        </tr>
+      <% } %>
+    </table>
+  </div>
+
   <script src="socket.io/socket.io.js"></script>
   <script >
     const socket = io();
     
-    const temp = document.getElementById('temp');
-    const humi = document.getElementById('humi');
-    const light = document.getElementById('light');
+    const devices = document.querySelectorAll('.device');
+    
+    const pinSensors = document.querySelectorAll('.pinSensor');
+    const pinOutputs = document.querySelectorAll('.pinOutput');
+  
+    const valueSensors = document.querySelectorAll('.valueSensor');
+    const valueOutputs = document.querySelectorAll('.valueOutput');
 
-    socket.on('temp data', (msg) => {
-      temp.innerHTML = `Temp: ${msg}°C`;
+    pinSensors.forEach((pinSensor, index) => {
+      socket.on(`data${pinSensor.innerHTML}`, (msg) => {
+        console.log(msg);
+        valueSensors[index].innerHTML = msg;
+      })
+    });
+
+    valueOutputs.forEach((valueOutput, index) => {
+      valueOutput.addEventListener('change', (event) => {
+        //send data to server through socketIO
+        //TODO
+        //------------OLD CODE------------------
+        // socket.emit('switch data', {
+        //   pin: pinOutputs[index].innerHTML, 
+        //   value: valueOutput.checked,
+        //   typeSensor: 3});
+        // console.log(valueOutput.checked);
+        //------------------------------
+      })
     })
 
-    socket.on('humi data', (msg) => {
-      humi.innerHTML = `Humi: ${msg}%`;
-    })
 
-    socket.on('light data', (msg) => {
-      light.innerHTML = `Light: ${msg}Lux`;
-    })
-
+    
   </script>
 </body>
 </html>
