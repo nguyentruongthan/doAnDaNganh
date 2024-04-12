@@ -4,12 +4,6 @@ let TYPE_DHT_SENSOR = 2
 let TYPE_LIGHT_OUTPUT = 3
 let TYPE_PUMP_OUTPUT = 4
 
-
-
-let AIO_USERNAME = "nguyentruongthan"
-let AIO_KEY = "aio_vuMN25byK98NvxriL77hAfLe5KyK"
-let AIO_FEED_IDs = ["user1.farm1"]
-
 let HEADER_CREATE = 0
 let HEADER_DELETE = 1
 let HEADER_SENSOR_VALUE = 2
