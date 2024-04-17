@@ -1,10 +1,6 @@
 import mqtt from 'mqtt';
-import fs from 'fs';
-import constant from '../services/constant';
 
 const brokerUrl = 'mqtt://mqtt.ohstem.vn';
-const mqttName = 'nguyentruongthan';
-const password = ''; 
 
 
 class MQTTClient {
@@ -17,8 +13,8 @@ class MQTTClient {
     this.client.publish(topic, message);
   }
 
-  constructor(brokerUrl, mqttName, password, topics) {
-    password = password.replace(/#/g, '');// khong su dung neu dung ohstem
+  constructor(brokerUrl, mqttName, password) {
+    console.log('init MQTT');
     this.client = mqtt.connect(brokerUrl, {
       username: mqttName,
       password: password,
@@ -31,7 +27,7 @@ class MQTTClient {
       //fetch username
       //EX: data base has 2 user called 'qwe' and 'asd'
       //user 'qwe' has a farm called 'farm1' 
-      //user 'asd' has a farm called 'farm1'
+      //user 'asd' has a farm called 'farm2'
       let topics = [
         {
           username: 'qwe',
@@ -39,44 +35,45 @@ class MQTTClient {
         },
         {
           username: 'asd',
-          gardens: ['farm1']  
+          gardens: ['farm2']  
         }
       ];
       
 
-      //fetch farmkey
-      //format of topic is {mqttName}/feeds/{username}/{farmkey}
+      //fetch gardenID
+      //format of topic is {mqttName}/feeds/{gardenID}
 
       topics.forEach(topic => {
-        let username = topic.username
         let gardens = topic.gardens
         gardens.forEach((garden) => {
-          this.client.subscribe(`${mqttName}/feeds/${username}/${garden}`)
-          if (err) {
-            console.log(err);
-          }
+          this.client.subscribe(`${mqttName}/feeds/${garden}`, (err) => {
+            if (err) {
+              console.log(err);
+            }
+          })
         })
       });
     });
 
     this.client.on('message', async (topic, message) => {
-      //topic format is: {mqttName}/feeds/{username}/{gardenKey}
+      //topic format is: {mqttName}/feeds/{gardenID}
       console.log(`Received message from ${topic}: ${message.toString()}`);
       // Xử lý dữ liệu nhận được tại đây
-      // get username
       let splitMessage = topic.split('/');
-      let username = splitMessage[2];
-      // get gardenKey
-      let gardenKey = splitMessage[3];
+      // get gardenID
+      let gardenID = splitMessage[2];
 
-      // condition for username and gardenKey
-      //  data format: {header}:{data}
+      
+      // condition for username and gardenID
+      //  message format: {header}:{data}
+      _io.emit(`${gardenID}`, message);
       //  handle header:
       //    TODO
       //    HEADER_SENSOR_VALUE: receive data from sensor
       //      check data valid then call model to add to database and call controller socketIO to view
       //    HEADER_GET_DEVICE: receive request from IoTGateway, it request list COM Port and device
       //      TODO
+
 
       //-----------------remove code below after---------------
       // topic = topic.split('/')[2];
@@ -142,7 +139,7 @@ class MQTTClient {
     });
   }
 }
-const mqttClient = new MQTTClient(brokerUrl, mqttName, password);
+const mqttClient = new MQTTClient(brokerUrl, "nguyentruongthan", 'xxxxx');
 module.exports = {
   mqttClient,
 };

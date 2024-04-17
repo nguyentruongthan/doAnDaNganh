@@ -11,7 +11,6 @@ class SocketServices {
     socket.on('chat message', (msg) => {
       _io.emit('chat message', msg);
     })
-
     // socket.on('switch data', (msg) => {
     //   let pin = msg.pin.replace(" ", "");
     //   let typeSensor = msg.typeSensor;

@@ -52,6 +52,7 @@ let getHomePage = async (req, res) => {
 
 let getDashBoard = async (req, res) => {
   //call service to get device according username and gardenID
+  //TODO
   //Ex: list device id is
   const devices = [
     {
@@ -94,71 +95,53 @@ let getDashBoard = async (req, res) => {
     'dashBoard.ejs',
     { data: devices }
   );
-
-
-  // fs.readFile('./src/jsonFile/devices.json', 'utf-8', (err, data) => {
-  //   if (err) {
-  //     console.error('Error reading file:', err);
-  //     return;
-  //   }
-  //   try {
-  //     // Parse JSON string to object
-  //     const jsonData = JSON.parse(data);
-  //     if (jsonData.devices && Object.keys(jsonData.devices).length !== 0) {
-  //       JSON.stringify(jsonData.devices)
-  //       return res.render('dashBoard.ejs',
-  //         { data: jsonData.devices }
-  //       );
-  //     } else {
-  //       return res.render('dashBoard.ejs',
-  //         { data: {} }
-  //       );
-  //     }
-  //   } catch (error) {
-  //     if (error instanceof SyntaxError && error.message === 'Unexpected end of JSON input') {
-  //       return res.render('dashBoard.ejs',
-  //         { data: {} }
-  //       );
-  //     } else {
-  //       console.error('Error parsing JSON data:', error);
-  //       return res.status(500).send('Internal Server Error'); // Render an error template or send an error response
-  //     }
-  //   }
-  // })
+  
 }
 
 let getDevices = async (req, res) => {
-  fs.readFile('./src/jsonFile/devices.json', 'utf-8', (err, data) => {
-    if (err) {
-      console.error('Error reading file:', err);
-      return;
-    }
-    try {
-      // Parse JSON string to object
-      const jsonData = JSON.parse(data);
-      if (jsonData.devices && Object.keys(jsonData.devices).length !== 0) {
-        JSON.stringify(jsonData.devices)
-        
-        return res.render('devices.ejs',
-          { data: jsonData.devices }
-        );
-      } else {
-        return res.render('devices.ejs',
-          { data: {} }
-        );
-      }
-    } catch (error) {
-      if (error instanceof SyntaxError && error.message === 'Unexpected end of JSON input') {
-        return res.render('devices.ejs',
-          { data: {} }
-        );
-      } else {
-        console.error('Error parsing JSON data:', error);
-        return res.status(500).send('Internal Server Error'); // Render an error template or send an error response
-      }
-    }
-  })
-
+  //call service to get device according username and gardenID
+  //TODO
+  //Ex: list device id is
+  const devices = [
+    {
+      deviceID: 1,
+      value: "32.4,78",
+      pin: "P19",
+      type: "2", //Temp and humi air sensor
+      deviceName: "Nhiệt độ và độ ẩm không khí"
+    },
+    {
+      deviceID: 2,
+      value: "34",
+      pin: "P0",
+      type: "0", //Light sensor
+      deviceName: "Ánh sáng 1"
+    },
+    {
+      deviceID: 3,
+      value: "68",
+      pin: "P1",
+      type: "1", //Humi soil sensor
+      deviceName: "Độ ẩm đất 1"
+    },
+    {
+      deviceID: 4,
+      value: "0",
+      pin: "P2",
+      type: "3", //Light output
+      deviceName: "Đèn 1"
+    },
+    {
+      deviceID: 5,
+      value: "0",
+      pin: "P3",
+      type: "4", //Pump output
+      deviceName: "Máy bơm 1"
+    },
+  ]
+  //send response
+  res.set({ "Access-Control-Allow-Origin": "*" });
+  res.status(200).json({"data": devices})
 }
 
 let postDevice = async (req, res) => {

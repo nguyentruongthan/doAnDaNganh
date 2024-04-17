@@ -55,15 +55,24 @@
     const valueSensors = document.querySelectorAll('.valueSensor');
     const valueOutputs = document.querySelectorAll('.valueOutput');
 
-    pinSensors.forEach((pinSensor, index) => {
-      socket.on(`data${pinSensor.innerHTML}`, (msg) => {
-        console.log(msg);
-        valueSensors[index].innerHTML = msg;
-      })
-    });
+    //example for username and garden
+    const username = "qwe";
+    const gardenID = "farm1"
+
+    socket.on(`${gardenID}`, (msg) => {
+      console.log("recv message from socket");
+      console.log(msg);
+    })
+
+    // pinSensors.forEach((pinSensor, index) => {
+    //   socket.on(`data${pinSensor.innerHTML}`, (msg) => {
+    //     console.log(msg);
+    //     valueSensors[index].innerHTML = msg;
+    //   })
+    // });
 
     valueOutputs.forEach((valueOutput, index) => {
-      valueOutput.addEventListener('change', (event) => {
+      valueOutput.addEventListener('change', (event) => { 
         //send data to server through socketIO
         //TODO
         //------------OLD CODE------------------
