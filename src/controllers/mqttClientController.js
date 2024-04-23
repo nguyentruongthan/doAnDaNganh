@@ -10,7 +10,7 @@ class MQTTClient {
       return;
     }
     // console.log("Publishing to mqtt");
-    this.client.publish(topic, message);
+    this.client.publish(`nguyentruongthan/feeds/${topic}`, message);
   }
 
   constructor(brokerUrl, mqttName, password) {

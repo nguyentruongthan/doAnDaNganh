@@ -20,11 +20,12 @@ const io = new Server(server, {
 });
 global._io = io;
 //config app
-initWebRoutes(app);
 
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
+
+initWebRoutes(app);
 
 viewEngine(app);
 

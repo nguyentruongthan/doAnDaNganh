@@ -1,6 +1,8 @@
 
 import fs from 'fs';
 import constant from '../services/constant';
+import deviceService from '../services/deviceService';
+import mqttService from '../services/mqttService';
 // import updateSensor from "../services/updateSensor"; 
 
 function decodeDeviceNametoNumber(nameDevice) {
@@ -144,6 +146,76 @@ let getDevices = async (req, res) => {
   res.status(200).json({"data": devices})
 }
 
+const controlDevice = async (req, res) => {
+  const gardenID = req.body.gardenID;
+  const data = req.body.data;
+
+  //TODO
+  const splitData = data.split(':');
+  if (splitData.length != 4) return res.status(400).json({ "data": "error" });
+  const header = splitData[0];
+  const typeDevice = splitData[1];
+  const pin = splitData[2];
+  const value = splitData[3];
+  if (header == constant.HEADER_CONTROL_DEVICE) {
+    const message = `${constant.HEADER_CONTROL_DEVICE}:${typeDevice}:${pin}:${value}`
+    //call mqttService for publish message to topic <gardenID>
+    mqttService.publish(gardenID, message)
+    //call service to add to database
+    //TODO
+    //call socketIOService to emit to view
+    _io.emit(`${gardenID}`, message);
+
+  } else {
+    return res.status(400).json({ "data": "error" });
+  }
+  res.status(200).json({ "data": "control device" });
+}
+
+const createDevice = async (req, res) => {
+  const gardenID = req.body.gardenID;
+  const data = req.body.data;
+  const splitData = data.split(':');
+  if (splitData.length != 3) return res.status(400).json({ "data": "error" });
+  const header = splitData[0];
+  const typeDevice = splitData[1];
+  const pin = splitData[2];
+  if (header == constant.HEADER_CREATE) {
+    const message = `${constant.HEADER_CREATE}:${typeDevice}:${pin}`
+    //call mqttService for publish message to topic <gardenID>
+    mqttService.publish(gardenID, message);
+    //call service to add to database
+    //TODO
+
+  } else {
+    return res.status(400).json({ "data": "error" });
+  }
+  res.status(200).json({ "data": "create device" });
+}
+
+const createScheduler = async (req, res) => {
+  const gardenID = req.body.gardenID;
+  const header = req.body.header;
+  const startTime = req.body.startTime;
+  const duration = req.body.duration;
+  const typeDevice = req.body.typeDevice;
+  const pin = req.body.pin;
+
+  if (header != constant.HEADER_CREATE_SCHEDULER) return res.status(400).json({ "data": "error" });
+  
+  const startTimeMinute = parseInt(startTime.split(':')[0]) * 60 + parseInt(startTime.split(':')[1]);
+  const endTimeMinute = startTimeMinute + parseInt(duration);
+  
+  //call mqttService for publish message to topic <gardenID>
+  mqttService.publish(gardenID, `${constant.HEADER_CREATE_SCHEDULER}:${typeDevice}:${pin}:${startTimeMinute}:${endTimeMinute}`);
+  //call service to add to database
+  //add to database startTime with action is turn on
+  //add to database endTime with action is turn off
+
+  res.status(200).json({ "data": "create scheduler" });
+}
+
+
 let postDevice = async (req, res) => {
   
   let nameDevices = Array.isArray(req.body.nameDevice) ? req.body.nameDevice : [req.body.nameDevice];
@@ -216,4 +288,7 @@ module.exports = {
   getDashBoard: getDashBoard,
   getDevices: getDevices,
   postDevice: postDevice,
+  controlDevice: controlDevice,
+  createDevice: createDevice,
+  createScheduler: createScheduler,
 }
