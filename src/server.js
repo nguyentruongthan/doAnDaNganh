@@ -24,6 +24,7 @@ global._io = io;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use('/public/', express.static('./public'));
 
 initWebRoutes(app);
 

@@ -194,20 +194,21 @@ const createDevice = async (req, res) => {
 }
 
 const createScheduler = async (req, res) => {
-  const gardenID = req.body.gardenID;
   const header = req.body.header;
-  const startTime = req.body.startTime;
-  const duration = req.body.duration;
   const typeDevice = req.body.typeDevice;
   const pin = req.body.pin;
+  const action = req.body.action;
+  const startTime = req.body.startTime;
+  const endTime = req.body.endTime;
+  const gardenID = req.body.gardenID;
 
   if (header != constant.HEADER_CREATE_SCHEDULER) return res.status(400).json({ "data": "error" });
   
   const startTimeMinute = parseInt(startTime.split(':')[0]) * 60 + parseInt(startTime.split(':')[1]);
-  const endTimeMinute = startTimeMinute + parseInt(duration);
+  const endTimeMinute = parseInt(endTime.split(':')[0]) * 60 + parseInt(endTime.split(':')[1]);
   
   //call mqttService for publish message to topic <gardenID>
-  mqttService.publish(gardenID, `${constant.HEADER_CREATE_SCHEDULER}:${typeDevice}:${pin}:${startTimeMinute}:${endTimeMinute}`);
+  mqttService.publish(gardenID, `${constant.HEADER_CREATE_SCHEDULER}:${typeDevice}:${pin}:${action}:${startTimeMinute}:${endTimeMinute}`);
   //call service to add to database
   //add to database startTime with action is turn on
   //add to database endTime with action is turn off

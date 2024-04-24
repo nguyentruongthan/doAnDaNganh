@@ -1,0 +1,123 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Arima", system-ui;
+    font-size: 1.6rem;
+    width: 100vw;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+/* Common */
+.btn {
+    font-size: 2rem;
+    margin: 20px;
+}
+/*=========== Sidebar ============*/
+.wrap .sidebar {
+    font-family: "Bree Serif", serif;
+    height: 100vh;
+    /* width: 310px; */
+    width: 23%;
+    background-color: rgba(55, 140, 231, 0.31);
+}
+.sidebar .logo {
+    max-height: 112px;
+}
+.sidebar .hero .title {
+    align-self: center;
+    font-size: 2.5rem;
+}
+
+.sidebar .hero.title {
+    font-size: 1.8rem;
+}
+/* sidebar content */
+.sidebar .content {
+    font-size: 2.2rem;
+    padding: 10px 0px;
+}
+.sidebar .content .title {
+    padding: 5px;
+}
+.sidebar .content .link {
+    background: #8db3dc;
+    justify-content: center;
+}
+.sidebar .content.link li {
+    margin-left: 15px;
+}
+.sidebar .content .link li:nth-child(3) {
+    margin-left: -5px;
+}
+/*=========== Content ============*/
+/* .container {
+    padding: 0;
+    display: inline-block;
+    width: calc(100vw - 310px);
+    width: calc(100vw - 23%);
+} */
+.container-fluid .header {
+    align-items: center;
+    height: 70px;
+    background-color: rgba(55, 140, 231, 0.48);
+    font-size: 2.4rem;
+}
+.container-fluid .header .wrap-garden a {
+    margin-left: 0;
+}
+
+main {
+    font-family: "Arima", system-ui;
+}
+.container-fluid .header .garden {
+    margin-top: 5px;
+}
+
+/* featured */
+.container-fluid .featured .title {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+    font-weight: 500;
+    font-size: 3rem;
+    width: calc(100vw - 500px);
+    border-bottom: 1px solid black;
+}
+
+/* featured list item */
+.featured .list {
+    /* gap: 30px; */
+    /* justify-content: space-between; */
+    justify-content: space-around;
+    font-size: 2.4rem;
+    margin: 10px;
+}
+
+.featured .list .item {
+    align-items: center;
+}
+
+.featured .list .item .desc {
+    padding: 10px;
+}
+
+.container-fluid .control .title {
+    padding: 10px;
+    margin: 10px;
+    font-size: 3rem;
+    width: calc(100vw - 500px);
+    border-bottom: 1px solid black;
+}
+
+.button-click {
+    align-items: center;
+}
