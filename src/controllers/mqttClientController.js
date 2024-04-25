@@ -1,5 +1,6 @@
 import mqtt from 'mqtt';
 import constant from '../services/constant';
+import eventService from '../services/eventService';
 const brokerUrl = 'mqtt://mqtt.ohstem.vn';
 
 
@@ -57,11 +58,12 @@ class MQTTClient {
 
     this.client.on('message', async (topic, message) => {
       //topic format is: {mqttName}/feeds/{gardenID}
+      message = message.toString();
       console.log(`Received message from ${topic}: ${message.toString()}`);
       // Xử lý dữ liệu nhận được tại đây
-      let splitMessage = topic.split('/');
+      let splitMessage = message.toString().split(':');
       // get gardenID
-      let gardenID = splitMessage[2];
+      let gardenID = topic.split('/')[2];
       
       
       // condition for username and gardenID
@@ -69,6 +71,8 @@ class MQTTClient {
       const header = splitMessage[0];
       if (header === constant.HEADER_SENSOR_VALUE.toString()) {
         _io.emit(`${gardenID}`, message);
+      } else if (header === constant.HEADER_ACK.toString()) {
+        eventService.mqttEvent.emit(`${message}`, "");
       }
       //  handle header:
       //    TODO

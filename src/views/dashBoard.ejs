@@ -325,25 +325,40 @@
                 outputDevice.addEventListener('click', async (e) => {
                     e.preventDefault();
                     reloadContainer.style.display = "flex";
-                    await fetch('http://localhost:8080/api/controlDevice', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            "gardenID": "farm1",
-                            "header": "3", //<HEADER_CONTROL_DEVICE>
-                            "typeDevice": "3", //Digital output device
-                            "pin": `${e.target.id}`, //pin of device
-                            "value": `${e.target.checked ? "1" : "0"}`
-                        })
-                    })
-                    .then((res)  => {
-                        outputDevice.checked = !e.target.checked;
+                    const timeout = setTimeout(() => {
                         reloadContainer.style.display = "none";
-                    }).catch((err) => {
+                        alert("Không nhận được phản hồi từ Server");
+                    }, 5000);
+                    try{
+                        const res = await fetch('http://localhost:8080/api/controlDevice', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                "gardenID": "farm1",
+                                "header": "3", //<HEADER_CONTROL_DEVICE>
+                                "typeDevice": "3", //Digital output device
+                                "pin": `${e.target.id}`, //pin of device
+                                "value": `${e.target.checked ? "1" : "0"}`
+                            })
+                        })
+                        if(res.ok){
+                            const responseData = await res.json();
+                            if(responseData.result === "success"){
+                                outputDevice.checked = !e.target.checked;
+                                reloadContainer.style.display = "none";
+                            }else{
+                                reloadContainer.style.display = "none";
+                                alert("Không nhận được phản hồi từ phía IoTGateway");
+                            }
+                            clearTimeout(timeout);
+                        }else {
+                            throw new Error('Network response was not ok.');
+                        }
+                    }catch(err){
                         console.log(err);
-                    })
+                    }
                 })
             })
         </script>

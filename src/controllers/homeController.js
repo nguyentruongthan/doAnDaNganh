@@ -3,6 +3,7 @@ import fs from 'fs';
 import constant from '../services/constant';
 import deviceService from '../services/deviceService';
 import mqttService from '../services/mqttService';
+import eventService from '../services/eventService';
 // import updateSensor from "../services/updateSensor"; 
 
 function decodeDeviceNametoNumber(nameDevice) {
@@ -152,17 +153,24 @@ const controlDevice = async (req, res) => {
   const typeDevice = req.body.typeDevice;
   const pin = req.body.pin;
   const value = req.body.value;
+  const ack = Date.now()
   if (header == constant.HEADER_CONTROL_DEVICE) {
-    const message = `${constant.HEADER_CONTROL_DEVICE}:${typeDevice}:${pin}:${value}`
+    const message = `${constant.HEADER_CONTROL_DEVICE}:${typeDevice}:${pin}:${value}:${ack}`
     //call mqttService for publish message to topic <gardenID>
     mqttService.publish(gardenID, message)
-    //call service to add to database
-    //TODO
-    //call socketIOService to emit to view
-    // _io.emit(`${gardenID}`, message);
-    return res.status(200).json({ "data": "control device" });
+    
+    const timeout = setTimeout(() => {
+      res.status(200).json({ "result": "failed" });
+    }, 3000)
+
+    await eventService.mqttEvent.once(`${constant.HEADER_ACK}:${ack}`, () => {
+      clearTimeout(timeout);
+      //call service to add to database
+      //TODO
+      res.status(200).json({ "result": "success" });
+    });
   } else {
-    return res.status(400).json({ "data": "error" });
+    return res.status(400).json({ "result": "error" });
   }
   
 }
