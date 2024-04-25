@@ -59,11 +59,11 @@ if __name__ == "__main__":
     
 
     if(typeSensor == constants.TYPE_LIGHT_SENSOR):
-      value = f"{random.randint(10, 100)}"
+      value = f"P0:{random.randint(10, 100)}"
     elif(typeSensor == constants.TYPE_SOIL_SENSOR):
-      value = f"{random.randint(10, 100)}"
+      value = f"P1:{random.randint(10, 100)}"
     elif(typeSensor == constants.TYPE_DHT_SENSOR):
-      value = f"{random.randint(20, 40)}:{random.randint(0, 100)}"
+      value = f"P13:{random.randint(20, 40)}:{random.randint(0, 100)}"
     publishSensorValue(typeSensor, value)
     typeSensor = (typeSensor + 1) % 3
     time.sleep(5)

@@ -2,245 +2,383 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <!-- <link rel="stylesheet" href="reset.css" /> -->
-        <link href="/css/reset.css" rel="stylesheet" type="text/css">
-
-        <!-- Bootrap 5 -->
+        <!----======== CSS ======== -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+        <link href="/css/dashBoard.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!----===== Boxicons CSS ===== -->
         <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-            crossorigin="anonymous"
-        />
-        <script
-            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-            integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
-            crossorigin="anonymous"
-        ></script>
-        <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-            integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-            crossorigin="anonymous"
-        ></script>
-        <!--Font  -->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Arima:wght@100..700&family=Bree+Serif&display=swap"
+            href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css"
             rel="stylesheet"
         />
-
-        <!-- <link rel="stylesheet" href="./style.css" /> -->
-        <link href="/css/style.css" rel="stylesheet" type="text/css">
-      
-        <title>IOT-farming</title>
+        <!-- gg icon -->
+        
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+        />
+        <title>IOT FARM</title>
     </head>
     <body>
-        <div class="wrap d-flex position-relative">
-            <!-- sidebar -->
-            <div class="sidebar">
-                <div class="hero d-flex">
-                    <img
-                        src="./img/01_logobachkhoasang 1.svg"
-                        alt="logobk"
-                        class="logo"
-                    />
-                    <h1 class="title">Hệ thống vườn thông minh</h1>
-                </div>
-                <!-- content -->
-                <div class="content container-fluid">
-                    <div class="title">Tổng quan</div>
-                    <div class="control d-flex link">
-                        <img src="./img/iconcontrol.svg" alt="" />
-                        <a href="#!">Điều khiển động cơ</a>
+        <div class="reloadContainer">
+            <i class="fa fa-refresh fa-spin" ></i>
+        </div>
+        <nav class="sidebar close">
+            <header>
+                <div class="image-text">
+                    <span class="image">
+                        <img src="./img/01_logobachkhoasang 1.svg" alt="" />
+                    </span>
+
+                    <div class="text logo-text">
+                        <span class="name">Hệ thống</span>
+                        <span class="profession">Vườn thông minh</span>
                     </div>
-                    <div class="title">Các thông số môi trường</div>
-                    <ul class="link">
-                        <li class="d-flex">
-                            <img src="./img/temperature.svg" alt="temp" />
-                            <a href="#!">Nhiệt độ</a>
+                </div>
+
+                <i class="bx bx-chevron-right toggle"></i>
+            </header>
+
+            <div class="menu-bar">
+                <div class="menu">
+                    <li class="search-box">
+                        <i class="bx bx-search icon"></i>
+                        <input type="text" placeholder="Search..." />
+                    </li>
+
+                    <ul class="menu-link">
+                        <li class="nav-link">
+                            <a href="#">
+                                <i class="bx bx-home-alt icon"></i>
+                                <span class="text nav-text"
+                                    >Điều khiển động cơ</span
+                                >
+                            </a>
                         </li>
-                        <li class="d-flex">
-                            <img src="./img/water.svg" alt="water" />
-                            <a href="#!">Độ ẩm đất</a>
+
+                        <li class="nav-link">
+                            <a href="#">
+                                <!-- <i class="bx bx-bar-chart-alt-2 icon"></i> -->
+                                <span class="material-symbols-outlined icon">
+                                    device_thermostat
+                                </span>
+                                <span class="text nav-text">Nhiệt độ</span>
+                            </a>
                         </li>
-                        <li class="d-flex">
-                            <img src="./img/doamkk.svg" alt="doamkk" />
-                            <a href="#!">Độ ẩm không khí</a>
+
+                        <li class="nav-link">
+                            <a href="#">
+                                <!-- <i class="bx bx-bell icon"></i> -->
+                                <span class="material-symbols-outlined icon">
+                                    humidity_mid
+                                </span>
+                                <span class="text nav-text">Độ ẩm đất</span>
+                            </a>
                         </li>
-                        <li class="d-flex">
-                            <img src="./img/sunny.svg" alt="sunny" />
-                            <a href="#!">Ánh sáng</a>
+
+                        <li class="nav-link">
+                            <a href="#">
+                                <!-- <i class="bx bx-pie-chart-alt icon"></i> -->
+                                <span class="material-symbols-outlined icon">
+                                    humidity_percentage
+                                </span>
+                                <span class="text nav-text"
+                                    >Độ ẩm không khí</span
+                                >
+                            </a>
+                        </li>
+
+                        <li class="nav-link">
+                            <a href="#">
+                                <span class="material-symbols-outlined icon">
+                                    wb_sunny
+                                </span>
+                                <span class="text nav-text">Ánh sáng</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-link">
+                            <a href="#">
+                                <i class="bx bx-wallet icon"></i>
+                                <span class="text nav-text"
+                                    >Cài đặt thời gian</span
+                                >
+                            </a>
                         </li>
                     </ul>
-                    <div class="title">Thiết lập thời gian</div>
-                    <div class="time d-flex link">
-                        <img src="./img/ph_clock.svg" alt="ph_clock" />
-                        <a href="#!">Cài đặt thời gian</a>
-                    </div>
                 </div>
-            </div>
-            <!-- content -->
-            <div class="container-fluid">
-                <!-- header -->
-                <header class="header d-flex justify-content-around">
-                    <div class="wrap-garden d-flex">
-                        <div class="garden">Vườn</div>
-                        <a href="#!"
-                            ><img src="./img/arrow-down.svg" alt=""
-                        /></a>
-                    </div>
-                    <div class="name">ADMIN</div>
-                </header>
-                <main>
-                    <!-- featured -->
-                    <div class="featured">
-                        <div class="title">Các thông số môi trường</div>
-                        <div class="list d-flex">
-                          <!-- JS -->
-                        </div>
-                    </div>
 
-                    <!-- control -->
-                    <div class="control">
-                        <div class="title">Điều khiển động cơ</div>
-                        <!-- button -->
-                        <div class="button-click d-flex">
-                            <div style="margin: 10px; font-size: 2.2rem">
-                                Chế độ:
-                            </div>
-                            <button type="button" class="btn btn-secondary">
-                                Tự động
-                            </button>
-                            <button type="button" class="btn btn-primary">
-                                Thủ công
-                            </button>
+                <div class="bottom-content">
+                    <li class="">
+                        <a href="#">
+                            <i class="bx bx-log-out icon"></i>
+                            <span class="text nav-text">Logout</span>
+                        </a>
+                    </li>
+
+                    <li class="mode">
+                        <div class="sun-moon">
+                            <i class="bx bx-moon icon moon"></i>
+                            <i class="bx bx-sun icon sun"></i>
                         </div>
-                        <table class="table mx-5 mt-5">
-                            <thead class="table-primary">
-                                <tr>
-                                    <th scope="col">Số thứ tự</th>
-                                    <th scope="col">Tên động cơ</th>
-                                    <th scope="col">Pin</th>
-                                    <th scope="col">ChipId</th>
-                                    <th scope="col">Công tắc thiết bị</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                              <% let index = 1; %>
-                              <% for(let i = 0; i < data.length; i++) {%>
-                                <% if(data[i].type < 3) continue; %>
-                                <tr>
-                                  <th scope="row"><%= index++ %></th>
-                                  <td><%= data[i].deviceName %></td>
-                                  <td><%= data[i].pin %></td>
-                                  <td>1</td>
-                                  <td>
-                                    <button
-                                        type="button"
-                                        class="btn btn-primary"
-                                    >
-                                        Bật
-                                    </button>
-                                </td>
-                              </tr>
-                              <% }%>
-                            </tbody>
-                        </table>
-                    </div>
-                </main>
+                        <span class="mode-text text">Dark mode</span>
+
+                        <div class="toggle-switch">
+                            <span class="switch"></span>
+                        </div>
+                    </li>
+                </div>
             </div>
-        </div>
+        </nav>
+        <!-- SECTION -->
+        <section class="home">
+            <div class="top">
+                <div></div>
+                <div class="d-flex align-items-center">
+                    <span>Vườn 1</span>
+                    <span class="material-symbols-outlined">
+                        enable
+                        </span>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="./img/people.jpg" alt=""/> admin
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                        <li><a class="dropdown-item active" href="#">Thông tin cá nhân</a></li>
+                        <li><a class="dropdown-item" href="#">Thông báo</a></li>
+                        <li><a class="dropdown-item" href="#">Trạng thái</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Đăng xuất</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Thong so -->
+            
+            <div class="text">Các thông số môi trường</div>
+            <div class="home-content">
+                <div class="overview d-flex">
+                    <!-- JS -->
+                </div>
+            </div>
+            <!-- Dieu khien -->
+            <div class="text">Điều khiển động cơ</div>
+            <div class="mode">
+                <div class="button d-flex align-items-center m-4">
+                    <div class="text">Chế độ</div>
+                    <button class="btn btn-danger">Tự động</button>
+                    <button class="btn btn-primary">Thủ công</button>
+                </div>
+            </div>
+            <!-- control -->
+            <div class="p-5">
+                <table class="table text-center">
+                    <thead class="table-primary">
+                        <tr>
+                            <th scope="col">Số thứ tự</th>
+                            <th scope="col">Tên động cơ</th>
+                            <th scope="col">Pin</th>
+                            <th scope="col">Công tắc thiết bị</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <script>
+            const body = document.querySelector("body"),
+                sidebar = body.querySelector("nav"),
+                toggle = body.querySelector(".toggle"),
+                searchBtn = body.querySelector(".search-box"),
+                modeSwitch = body.querySelector(".toggle-switch"),
+                modeText = body.querySelector(".mode-text");
+
+            toggle.addEventListener("click", () => {
+                sidebar.classList.toggle("close");
+            });
+
+            searchBtn.addEventListener("click", () => {
+                sidebar.classList.remove("close");
+            });
+
+            modeSwitch.addEventListener("click", () => {
+                body.classList.toggle("dark");
+
+                if (body.classList.contains("dark")) {
+                    modeText.innerText = "Light mode";
+                } else {
+                    modeText.innerText = "Dark mode";
+                }
+            });
+        </script>
+        <script>// variable
+            const devices = JSON.parse('<%- JSON.stringify(data) %>');
+            const sensorsContainer = document.querySelector(".overview");
+            const outputDevicesTable = document.querySelector(".table tbody");
+
+            const humiAirSensor = document.getElementById("humiAirSensor");
+            const tempSensor = document.getElementById("tempSensor");
+            const lightSensor = document.getElementById("lightSensor");
+            const humiSoilSensor = document.getElementById("humiSoilSensor");
+
+            const reloadContainer = document.querySelector(".reloadContainer");
+        </script>
+        <script>// create sensor component
+            const iconNames = {
+                nhietDo: "device_thermostat",
+                doAmKhongKhi: "humidity_percentage",
+                doAmDat: "humidity_mid",
+                anhSang: "wb_sunny"
+            };
+            
+            const sensorComponent = (type, value, pin) => {
+                type = parseInt(type);
+                if(type === 0){//light sensor
+                    return `
+                        <div class="title">
+                            <span class="material-symbols-outlined icon">
+                                ${iconNames.anhSang}
+                            </span>
+                                <div class="d-flex flex-column align-items-center">
+                                    <span class="text">Ánh sáng</span>
+                                    <span class="text" id="lightSensor">${value[0]} Lux</span>
+                                </div>
+                        </div>
+                    `
+                }else if(type === 1){//humidity soil sensor
+                    return `
+                        <div class="title">
+                            <span class="material-symbols-outlined icon">
+                                ${iconNames.doAmDat}
+                            </span>
+                                <div class="d-flex flex-column align-items-center">
+                                    <span class="text">Độ ẩm đất</span>
+                                    <span class="text" id="humiSoilSensor">${value[0]}%</span>
+                                </div>
+                        </div>
+                    `
+                }else if(type === 2){//dht sensensor
+                    return `
+                        <div class="title">
+                            <span class="material-symbols-outlined icon">
+                                ${iconNames.nhietDo}
+                            </span>
+                                <div class="d-flex flex-column align-items-center">
+                                    <span class="text">Nhiệt độ</span>
+                                    <span class="text" id="tempSensor">${value[0]}℃</span>
+                                </div>
+                        </div>
+                        <div class="title">
+                            <span class="material-symbols-outlined icon">
+                                ${iconNames.doAmKhongKhi}
+                            </span>
+                                <div class="d-flex flex-column align-items-center">
+                                    <span class="text">Độ ẩm không khí</span>
+                                    <span class="text" id="humiAirSensor">${value[1]}%</span>
+                                </div>
+                        </div>
+                        
+                    `
+                }else{
+                    return "";
+                }
+                
+            }
+            
+            
+            devices.forEach((device) => {
+                sensorsContainer.innerHTML += sensorComponent(device.type, device.value.split(","));
+            });
+        </script>
+        <script>// create output device component
+            const outputDeviceComponent = (index, name, pin, value) => {
+                return `
+                    <tr>
+                        <th scope="row">${index}</th>
+                        <td>${name}</td>
+                        <td>${pin}</td>
+                        <td>
+                            <div class="form-check form-switch d-flex justify-content-center">
+                                ${value === "1" ? 
+                                    `<input class='form-check-input outputDevice' type='checkbox' role='switch' id='${pin}' checked>` :
+                                    `<input class='form-check-input outputDevice' type='checkbox' role='switch' id='${pin}'>`}
+                            </div>
+                        </td>
+                    </tr>
+                `
+            }
+            let indexOutputDevice = 1;
+            devices.forEach((device) => {
+                if(device.type != "3") return;
+                outputDevicesTable.innerHTML += 
+                    outputDeviceComponent(indexOutputDevice++, device.deviceName, device.pin, device.value);
+            });
+
+            const outputDevices = document.querySelectorAll(".outputDevice");
+            outputDevices.forEach((outputDevice) => {
+                outputDevice.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    reloadContainer.style.display = "flex";
+                    await fetch('http://localhost:8080/api/controlDevice', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "gardenID": "farm1",
+                            "header": "3", //<HEADER_CONTROL_DEVICE>
+                            "typeDevice": "3", //Digital output device
+                            "pin": `${e.target.id}`, //pin of device
+                            "value": `${e.target.checked ? "1" : "0"}`
+                        })
+                    })
+                    .then((res)  => {
+                        outputDevice.checked = !e.target.checked;
+                        reloadContainer.style.display = "none";
+                    }).catch((err) => {
+                        console.log(err);
+                    })
+                })
+            })
+        </script>
+        <script src="socket.io/socket.io.js"></script>
+        <script>// socketIO
+            const socket = io();
+
+            //example for username and garden
+            const username = "qwe";
+            const gardenID = "farm1"
+
+            socket.on(`${gardenID}`, (msg) => {
+                let splitMessage = [];
+                if(typeof(msg) != "string"){
+                    const decoder = new TextDecoder('utf-8'); 
+                    const decodedString = decoder.decode(msg);
+                    splitMessage = decodedString.split(':');
+                }else{
+                    splitMessage = msg.split(':');
+                }
+                const header = splitMessage[0];
+                const type = splitMessage[1];
+                const pin = splitMessage[2];
+                const value = splitMessage[3];
+                if(header === "2"){//HEADER_SENSOR_VALUE
+                    if(type === "0"){
+                        lightSensor.innerText = `${value} LUX`;
+                    }else if(type === "1"){
+                        humiSoilSensor.innerText = `${value}%`;
+                    }else if(type === "2"){
+                        tempSensor.innerText = `${value} °C`;
+                        humiAirSensor.innerText = `${splitMessage[4]} %`;
+                    }
+                }
+            })
+        </script>
     </body>
-    <script>
-      const devices = JSON.parse('<%- JSON.stringify(data) %>');
-      const list = document.querySelector(".list");
-      
-      const sensorComponent = (type, value) => {
-        const imgNhietDo = "./img/Frame 11.svg";
-        const imgDoAmDat = "./img/Frame 11 (2).svg";
-        const imgDoAmKK = "./img/Frame 11 (1).svg";
-        const imgAnhSang = "./img/Frame 11 (3).svg";
-        let image = "";
-        let unit = "";
-        let name = "";
-        switch (parseInt(type)) {
-          case 0: //light sensor
-            return `
-              <div class="item d-flex" id="lightSensor">
-                  <img src='${imgAnhSang}' alt="" />
-                  <div class="desc">
-                      <p>Ánh sáng</p>
-                      <p class="value">${value} LUX</p>
-                  </div>
-              </div>
-            `
-          case 1: //soil sensor
-          return `
-              <div class="item d-flex" id="humiSoilSensor">
-                  <img src='${imgDoAmDat}' alt="" />
-                  <div class="desc">
-                      <p>Độ ẩm đất</p>
-                      <p class="value">${value} LUX</p>
-                  </div>
-              </div>
-            `
-          case 2: //dht sensor
-          return `
-            <div class="item d-flex" id="tempSensor">
-                <img src='${imgNhietDo}' alt="" />
-                <div class="desc">
-                    <p>Nhiệt độ</p>
-                    <p class="value">${value.split(',')[0]} °C</p>
-                </div>
-            </div>
-            <div class="item d-flex" id="humiAirSensor">
-                <img src='${imgDoAmKK}' alt="" />
-                <div class="desc">
-                    <p>Độ ẩm không khí</p>
-                    <p class="value">${value.split(',')[1]}%</p>
-                </div>
-            </div>
-          `
-          default: return "";
-        }
-      }
-      devices.forEach((device) => {
-        list.innerHTML += sensorComponent(device.type, device.value);
-      })
-    </script>
-    
-    <script src="socket.io/socket.io.js"></script>
-    <script >
-      const socket = io();
-      
-      const humiAirSensor = document.getElementById("humiAirSensor");
-      const tempSensor = document.getElementById("tempSensor");
-      const lightSensor = document.getElementById("lightSensor");
-      const humiSoilSensor = document.getElementById("humiSoilSensor");
-      //example for username and garden
-      const username = "qwe";
-      const gardenID = "farm1"
-  
-      socket.on(`${gardenID}`, (msg) => {
-        console.log("recv message from socket");
-        const decoder = new TextDecoder('utf-8'); 
-        const decodedString = decoder.decode(msg);
-        const splitMessage = decodedString.split(':');
-        const header = splitMessage[0];
-        const type = splitMessage[1];
-        const value = splitMessage[2];
-        if(header === "2"){
-          if(type === "0"){
-            lightSensor.querySelector('.value').innerText = `${value} LUX`;
-          }else if(type === "1"){
-            humiSoilSensor.querySelector('.value').innerText = `${value}%`;
-          }else if(type === "2"){
-            tempSensor.querySelector('.value').innerText = `${value} °C`;
-            humiAirSensor.querySelector('.value').innerText = `${splitMessage[3]} %`;
-          }
-        }
-      })
-    </script>
 </html>

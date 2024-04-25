@@ -87,9 +87,9 @@ let getDashBoard = async (req, res) => {
     },
     {
       deviceID: 5,
-      value: "0",
+      value: "1",
       pin: "P3",
-      type: "4", //Pump output
+      type: "3", //Pump output
       deviceName: "Máy bơm 1"
     },
   ]
@@ -148,15 +148,10 @@ let getDevices = async (req, res) => {
 
 const controlDevice = async (req, res) => {
   const gardenID = req.body.gardenID;
-  const data = req.body.data;
-
-  //TODO
-  const splitData = data.split(':');
-  if (splitData.length != 4) return res.status(400).json({ "data": "error" });
-  const header = splitData[0];
-  const typeDevice = splitData[1];
-  const pin = splitData[2];
-  const value = splitData[3];
+  const header = req.body.header;
+  const typeDevice = req.body.typeDevice;
+  const pin = req.body.pin;
+  const value = req.body.value;
   if (header == constant.HEADER_CONTROL_DEVICE) {
     const message = `${constant.HEADER_CONTROL_DEVICE}:${typeDevice}:${pin}:${value}`
     //call mqttService for publish message to topic <gardenID>
@@ -164,12 +159,12 @@ const controlDevice = async (req, res) => {
     //call service to add to database
     //TODO
     //call socketIOService to emit to view
-    _io.emit(`${gardenID}`, message);
-
+    // _io.emit(`${gardenID}`, message);
+    return res.status(200).json({ "data": "control device" });
   } else {
     return res.status(400).json({ "data": "error" });
   }
-  res.status(200).json({ "data": "control device" });
+  
 }
 
 const createDevice = async (req, res) => {

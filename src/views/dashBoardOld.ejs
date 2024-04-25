@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- <link rel="stylesheet" href="reset.css" /> -->
+        <link href="/css/reset.css" rel="stylesheet" type="text/css">
+
+        <!-- Bootrap 5 -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+        />
+        <script
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+            integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+            integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+            crossorigin="anonymous"
+        ></script>
+        <!--Font  -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Arima:wght@100..700&family=Bree+Serif&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- <link rel="stylesheet" href="./style.css" /> -->
+        <link href="/css/style.css" rel="stylesheet" type="text/css">
+      
+        <title>IOT-farming</title>
+    </head>
+    <body>
+        <div class="wrap d-flex position-relative">
+            <!-- sidebar -->
+            <div class="sidebar">
+                <div class="hero d-flex">
+                    <img
+                        src="./img/01_logobachkhoasang 1.svg"
+                        alt="logobk"
+                        class="logo"
+                    />
+                    <h1 class="title">Hệ thống vườn thông minh</h1>
+                </div>
+                <!-- content -->
+                <div class="content container-fluid">
+                    <div class="title">Tổng quan</div>
+                    <div class="control d-flex link">
+                        <img src="./img/iconcontrol.svg" alt="" />
+                        <a href="#!">Điều khiển động cơ</a>
+                    </div>
+                    <div class="title">Các thông số môi trường</div>
+                    <ul class="link">
+                        <li class="d-flex">
+                            <img src="./img/temperature.svg" alt="temp" />
+                            <a href="#!">Nhiệt độ</a>
+                        </li>
+                        <li class="d-flex">
+                            <img src="./img/water.svg" alt="water" />
+                            <a href="#!">Độ ẩm đất</a>
+                        </li>
+                        <li class="d-flex">
+                            <img src="./img/doamkk.svg" alt="doamkk" />
+                            <a href="#!">Độ ẩm không khí</a>
+                        </li>
+                        <li class="d-flex">
+                            <img src="./img/sunny.svg" alt="sunny" />
+                            <a href="#!">Ánh sáng</a>
+                        </li>
+                    </ul>
+                    <div class="title">Thiết lập thời gian</div>
+                    <div class="time d-flex link">
+                        <img src="./img/ph_clock.svg" alt="ph_clock" />
+                        <a href="#!">Cài đặt thời gian</a>
+                    </div>
+                </div>
+            </div>
+            <!-- content -->
+            <div class="container-fluid">
+                <!-- header -->
+                <header class="header d-flex justify-content-around">
+                    <div class="wrap-garden d-flex">
+                        <div class="garden">Vườn</div>
+                        <a href="#!"
+                            ><img src="./img/arrow-down.svg" alt=""
+                        /></a>
+                    </div>
+                    <div class="name">ADMIN</div>
+                </header>
+                <main>
+                    <!-- featured -->
+                    <div class="featured">
+                        <div class="title">Các thông số môi trường</div>
+                        <div class="list d-flex">
+                          <!-- JS -->
+                        </div>
+                    </div>
+
+                    <!-- control -->
+                    <div class="control">
+                        <div class="title">Điều khiển động cơ</div>
+                        <!-- button -->
+                        <div class="button-click d-flex">
+                            <div style="margin: 10px; font-size: 2.2rem">
+                                Chế độ:
+                            </div>
+                            <button type="button" class="btn btn-secondary">
+                                Tự động
+                            </button>
+                            <button type="button" class="btn btn-primary">
+                                Thủ công
+                            </button>
+                        </div>
+                        <table class="table mx-5 mt-5">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th scope="col">Số thứ tự</th>
+                                    <th scope="col">Tên động cơ</th>
+                                    <th scope="col">Pin</th>
+                                    <th scope="col">ChipId</th>
+                                    <th scope="col">Công tắc thiết bị</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              <% let index = 1; %>
+                              <% for(let i = 0; i < data.length; i++) {%>
+                                <% if(data[i].type < 3) continue; %>
+                                <tr>
+                                  <th scope="row"><%= index++ %></th>
+                                  <td><%= data[i].deviceName %></td>
+                                  <td><%= data[i].pin %></td>
+                                  <td>1</td>
+                                  <td>
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary"
+                                    >
+                                        Bật
+                                    </button>
+                                </td>
+                              </tr>
+                              <% }%>
+                            </tbody>
+                        </table>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </body>
+    <script>
+      const devices = JSON.parse('<%- JSON.stringify(data) %>');
+      const list = document.querySelector(".list");
+      
+      const sensorComponent = (type, value) => {
+        const imgNhietDo = "./img/Frame 11.svg";
+        const imgDoAmDat = "./img/Frame 11 (2).svg";
+        const imgDoAmKK = "./img/Frame 11 (1).svg";
+        const imgAnhSang = "./img/Frame 11 (3).svg";
+        let image = "";
+        let unit = "";
+        let name = "";
+        switch (parseInt(type)) {
+          case 0: //light sensor
+            return `
+              <div class="item d-flex" id="lightSensor">
+                  <img src='${imgAnhSang}' alt="" />
+                  <div class="desc">
+                      <p>Ánh sáng</p>
+                      <p class="value">${value} LUX</p>
+                  </div>
+              </div>
+            `
+          case 1: //soil sensor
+          return `
+              <div class="item d-flex" id="humiSoilSensor">
+                  <img src='${imgDoAmDat}' alt="" />
+                  <div class="desc">
+                      <p>Độ ẩm đất</p>
+                      <p class="value">${value} LUX</p>
+                  </div>
+              </div>
+            `
+          case 2: //dht sensor
+          return `
+            <div class="item d-flex" id="tempSensor">
+                <img src='${imgNhietDo}' alt="" />
+                <div class="desc">
+                    <p>Nhiệt độ</p>
+                    <p class="value">${value.split(',')[0]} °C</p>
+                </div>
+            </div>
+            <div class="item d-flex" id="humiAirSensor">
+                <img src='${imgDoAmKK}' alt="" />
+                <div class="desc">
+                    <p>Độ ẩm không khí</p>
+                    <p class="value">${value.split(',')[1]}%</p>
+                </div>
+            </div>
+          `
+          default: return "";
+        }
+      }
+      devices.forEach((device) => {
+        list.innerHTML += sensorComponent(device.type, device.value);
+      })
+    </script>
+    
+    <script src="socket.io/socket.io.js"></script>
+    <script >
+      const socket = io();
+      
+      const humiAirSensor = document.getElementById("humiAirSensor");
+      const tempSensor = document.getElementById("tempSensor");
+      const lightSensor = document.getElementById("lightSensor");
+      const humiSoilSensor = document.getElementById("humiSoilSensor");
+      //example for username and garden
+      const username = "qwe";
+      const gardenID = "farm1"
+  
+      socket.on(`${gardenID}`, (msg) => {
+        console.log("recv message from socket");
+        const decoder = new TextDecoder('utf-8'); 
+        const decodedString = decoder.decode(msg);
+        const splitMessage = decodedString.split(':');
+        const header = splitMessage[0];
+        const type = splitMessage[1];
+        const value = splitMessage[2];
+        if(header === "2"){
+          if(type === "0"){
+            lightSensor.querySelector('.value').innerText = `${value} LUX`;
+          }else if(type === "1"){
+            humiSoilSensor.querySelector('.value').innerText = `${value}%`;
+          }else if(type === "2"){
+            tempSensor.querySelector('.value').innerText = `${value} °C`;
+            humiAirSensor.querySelector('.value').innerText = `${splitMessage[3]} %`;
+          }
+        }
+      })
+    </script>
+</html>

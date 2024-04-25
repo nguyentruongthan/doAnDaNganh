@@ -1,5 +1,5 @@
 import mqtt from 'mqtt';
-
+import constant from '../services/constant';
 const brokerUrl = 'mqtt://mqtt.ohstem.vn';
 
 
@@ -62,11 +62,14 @@ class MQTTClient {
       let splitMessage = topic.split('/');
       // get gardenID
       let gardenID = splitMessage[2];
-
+      
       
       // condition for username and gardenID
       //  message format: {header}:{data}
-      _io.emit(`${gardenID}`, message);
+      const header = splitMessage[0];
+      if (header === constant.HEADER_SENSOR_VALUE.toString()) {
+        _io.emit(`${gardenID}`, message);
+      }
       //  handle header:
       //    TODO
       //    HEADER_SENSOR_VALUE: receive data from sensor
