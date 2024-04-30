@@ -52,7 +52,7 @@
 
                     <ul class="menu-link">
                         <li class="nav-link">
-                            <a href="#">
+                            <a href="http://localhost:8080/dashBoard">
                                 <i class="bx bx-home-alt icon"></i>
                                 <span class="text nav-text"
                                     >Điều khiển động cơ</span
@@ -61,7 +61,7 @@
                         </li>
 
                         <li class="nav-link">
-                            <a href="#">
+                            <a href="http://localhost:8080/nhietDo">
                                 <!-- <i class="bx bx-bar-chart-alt-2 icon"></i> -->
                                 <span class="material-symbols-outlined icon">
                                     device_thermostat
@@ -71,7 +71,7 @@
                         </li>
 
                         <li class="nav-link">
-                            <a href="#">
+                            <a href="http://localhost:8080/doAmDat">
                                 <!-- <i class="bx bx-bell icon"></i> -->
                                 <span class="material-symbols-outlined icon">
                                     humidity_mid
@@ -81,7 +81,7 @@
                         </li>
 
                         <li class="nav-link">
-                            <a href="#">
+                            <a href="http://localhost:8080/doAmKhongKhi">
                                 <!-- <i class="bx bx-pie-chart-alt icon"></i> -->
                                 <span class="material-symbols-outlined icon">
                                     humidity_percentage
@@ -93,7 +93,7 @@
                         </li>
 
                         <li class="nav-link">
-                            <a href="#">
+                            <a href="http://localhost:8080/anhSang">
                                 <span class="material-symbols-outlined icon">
                                     wb_sunny
                                 </span>
@@ -221,7 +221,8 @@
             const devices = JSON.parse('<%- JSON.stringify(data) %>');
             const sensorsContainer = document.querySelector(".overview");
             const outputDevicesTable = document.querySelector(".table tbody");
-
+            //example for username and garden
+            const username = "nguyentruongthan";
 
             const reloadContainer = document.querySelector(".reloadContainer");
         </script>
@@ -333,7 +334,7 @@
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                "gardenID": "farm1",
+                                "username": username,
                                 "typeDevice": "3", //Digital output device
                                 "pin": `${e.target.getAttribute('pin')}`, //pin of device
                                 "deviceID": `${e.target.id}`, //id of device	
@@ -366,12 +367,10 @@
             const tempSensor = document.getElementById("tempSensor");
             const lightSensor = document.getElementById("lightSensor");
             const humiSoilSensor = document.getElementById("humiSoilSensor");
-            //example for username and garden
-            const username = "qwe";
-            const gardenID = "farm1"
+            
 
-            socket.on(`${gardenID} 2`, (msg) => {
-                
+            socket.on(`${username} 2`, (msg) => {
+                // console.log(msg);
                 let splitMessage = [];
                 if(typeof(msg) != "string"){
                     const decoder = new TextDecoder('utf-8'); 

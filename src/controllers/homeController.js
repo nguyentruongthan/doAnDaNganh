@@ -154,7 +154,7 @@ let getDevices = async (req, res) => {
 
 const controlDevice = async (req, res) => {
   console.log(req.body);
-  const gardenID = req.body.gardenID;
+  const username = req.body.username;
   const typeDevice = req.body.typeDevice;
   const pin = req.body.pin;
   const deviceID = req.body.deviceID;
@@ -163,7 +163,7 @@ const controlDevice = async (req, res) => {
 
   const message = `${constant.HEADER_CONTROL_DEVICE}:${typeDevice}:${pin}:${value}:${ack}`
   //call mqttService for publish message to topic <gardenID>
-  mqttService.publish(gardenID, message)
+  mqttService.publish(username, message)
   
   const timeout = setTimeout(() => {
     res.status(200).json({ "result": "failed" });
@@ -307,6 +307,31 @@ let postDevice = async (req, res) => {
   });
   return res.send("dash-board post");
 }
+
+const getNhietDo = async (req, res) => {
+  return res.render(
+    'nhietDo.ejs',
+    {data: "34"}
+  );
+}
+const getDoAmKhongKhi = async (req, res) => {
+  return res.render(
+    'doAmKhongKhi.ejs',
+    {data: "84"}
+  );
+}
+const getDoAmDat = async (req, res) => {
+  return res.render(
+    'doAmDat.ejs',
+    {data: "55"}
+  );
+}
+const getAnhSang = async (req, res) => {
+  return res.render(
+    'anhSang.ejs',
+    {data: "65"}
+  );
+}
 module.exports = {
   getHomePage: getHomePage,
   getDashBoard: getDashBoard,
@@ -315,5 +340,9 @@ module.exports = {
   controlDevice: controlDevice,
   createDevice: createDevice,
   createScheduler: createScheduler,
-  getScheduler: getScheduler
+  getScheduler: getScheduler,
+  getNhietDo: getNhietDo,
+  getDoAmKhongKhi: getDoAmKhongKhi,
+  getDoAmDat: getDoAmDat,
+  getAnhSang: getAnhSang
 }

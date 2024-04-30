@@ -1,6 +1,7 @@
 import mqtt from 'mqtt';
 import constant from '../services/constant';
 import eventService from '../services/eventService';
+import userServices from '../services/userServices';
 const brokerUrl = 'mqtt://mqtt.ohstem.vn';
 
 
@@ -14,63 +15,39 @@ class MQTTClient {
     this.client.publish(`nguyentruongthan/feeds/${topic}`, message);
   }
 
-  constructor(brokerUrl, mqttName, password) {
+  constructor(brokerUrl) {
     console.log('init MQTT');
     this.client = mqtt.connect(brokerUrl, {
-      username: mqttName,
-      password: password,
+      username: 'nguyentruongthan',
+      password: '',
     });
 
     this.client.on('connect', () => {
       console.log('Connected to MQTT Broker');
       //subscribe to topic
-
-      //fetch username
-      //EX: data base has 2 user called 'qwe' and 'asd'
-      //user 'qwe' has a farm called 'farm1' 
-      //user 'asd' has a farm called 'farm2'
-      let topics = [
-        {
-          username: 'qwe',
-          gardens: ['farm1']
-        },
-        {
-          username: 'asd',
-          gardens: ['farm2']  
+      this.client.subscribe(`nguyentruongthan/feeds/+`, (err) => {
+        if (err) {
+          console.log(err);
         }
-      ];
-      
-
-      //fetch gardenID
-      //format of topic is {mqttName}/feeds/{gardenID}
-
-      topics.forEach(topic => {
-        let gardens = topic.gardens
-        gardens.forEach((garden) => {
-          this.client.subscribe(`${mqttName}/feeds/${garden}`, (err) => {
-            if (err) {
-              console.log(err);
-            }
-          })
-        })
-      });
+      })
     });
 
     this.client.on('message', async (topic, message) => {
-      //topic format is: {mqttName}/feeds/{gardenID}
+      //topic format is: {nguyentruongthan}/feeds/{username}
+      let username = topic.split('/')[2];
+      if (username === "V1" || username === "V2") {
+        return;
+      }
+
       message = message.toString();
       console.log(`Received message from ${topic}: ${message.toString()}`);
       // Xử lý dữ liệu nhận được tại đây
       let splitMessage = message.toString().split(':');
-      // get gardenID
-      let gardenID = topic.split('/')[2];
-      
-      
-      // condition for username and gardenID
-      //  message format: {header}:{data}
+
       const header = splitMessage[0];
       if (header === constant.HEADER_SENSOR_VALUE.toString()) {
-        _io.emit(`${gardenID} ${constant.HEADER_SENSOR_VALUE}`, message);
+        //message format: {HEADER_SENSOR_VALUE}:{typeDevice}:{pin}:{value}
+        _io.emit(`${username} ${constant.HEADER_SENSOR_VALUE}`, message);
       } else if (header === constant.HEADER_ACK.toString()) {
         eventService.mqttEvent.emit(`${message}`, "");
       }
@@ -146,7 +123,7 @@ class MQTTClient {
     });
   }
 }
-const mqttClient = new MQTTClient(brokerUrl, "nguyentruongthan", 'xxxxx');
+const mqttClient = new MQTTClient(brokerUrl);
 module.exports = {
   mqttClient,
 };
