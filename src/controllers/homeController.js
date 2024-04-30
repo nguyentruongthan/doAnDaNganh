@@ -8,8 +8,6 @@ import eventService from '../services/eventService';
 
 function decodeDeviceNametoNumber(nameDevice) {
   switch (nameDevice) {
-    case "AirSensor":
-      return constant.TYPE_DHT_SENSOR;
     case "HumiSoilSensor":
       return constant.TYPE_SOIL_SENSOR;
     case "LightSensor":
@@ -60,37 +58,44 @@ let getDashBoard = async (req, res) => {
   const devices = [
     {
       deviceID: 1,
-      value: "32.4,78",
-      pin: "P19",
-      type: "2", //Temp and humi air sensor
-      deviceName: "Nhiệt độ và độ ẩm không khí"
-    },
-    {
-      deviceID: 2,
       value: "34",
       pin: "P0",
       type: "0", //Light sensor
-      deviceName: "Ánh sáng 1"
+      deviceName: "Ánh sáng"
     },
     {
-      deviceID: 3,
+      deviceID: 2,
       value: "68",
       pin: "P1",
       type: "1", //Humi soil sensor
-      deviceName: "Độ ẩm đất 1"
+      deviceName: "Độ ẩm đất"
+    },
+    {
+      deviceID: 3,
+      value: "78",
+      pin: "P19",
+      type: "2", // Humi air sensor
+      deviceName: "Độ ẩm không khí"
     },
     {
       deviceID: 4,
-      value: "0",
-      pin: "P2",
-      type: "3", //Light output
-      deviceName: "Đèn 1"
+      value: "32.4",
+      pin: "P19",
+      type: "3", //Temp sensor
+      deviceName: "Nhiệt độ"
     },
     {
       deviceID: 5,
+      value: "0",
+      pin: "P2",
+      type: "4", //Light output
+      deviceName: "Đèn 1"
+    },
+    {
+      deviceID: 6,
       value: "1",
       pin: "P3",
-      type: "3", //Pump output
+      type: "4", //Pump output
       deviceName: "Máy bơm 1"
     },
   ]
@@ -148,30 +153,28 @@ let getDevices = async (req, res) => {
 }
 
 const controlDevice = async (req, res) => {
+  console.log(req.body);
   const gardenID = req.body.gardenID;
-  const header = req.body.header;
   const typeDevice = req.body.typeDevice;
   const pin = req.body.pin;
+  const deviceID = req.body.deviceID;
   const value = req.body.value;
   const ack = Date.now()
-  if (header == constant.HEADER_CONTROL_DEVICE) {
-    const message = `${constant.HEADER_CONTROL_DEVICE}:${typeDevice}:${pin}:${value}:${ack}`
-    //call mqttService for publish message to topic <gardenID>
-    mqttService.publish(gardenID, message)
-    
-    const timeout = setTimeout(() => {
-      res.status(200).json({ "result": "failed" });
-    }, 3000)
 
-    await eventService.mqttEvent.once(`${constant.HEADER_ACK}:${ack}`, () => {
-      clearTimeout(timeout);
-      //call service to add to database
-      //TODO
-      res.status(200).json({ "result": "success" });
-    });
-  } else {
-    return res.status(400).json({ "result": "error" });
-  }
+  const message = `${constant.HEADER_CONTROL_DEVICE}:${typeDevice}:${pin}:${value}:${ack}`
+  //call mqttService for publish message to topic <gardenID>
+  mqttService.publish(gardenID, message)
+  
+  const timeout = setTimeout(() => {
+    res.status(200).json({ "result": "failed" });
+  }, 3000)
+
+  await eventService.mqttEvent.once(`${constant.HEADER_ACK}:${ack}`, () => {
+    clearTimeout(timeout);
+    //call service to add to database
+    //TODO
+    res.status(200).json({ "result": "success" });
+  });
   
 }
 
@@ -197,28 +200,45 @@ const createDevice = async (req, res) => {
 }
 
 const createScheduler = async (req, res) => {
-  const header = req.body.header;
-  const typeDevice = req.body.typeDevice;
-  const pin = req.body.pin;
+  const outputID = req.body.outputID;
   const action = req.body.action;
   const startTime = req.body.startTime;
-  const endTime = req.body.endTime;
-  const gardenID = req.body.gardenID;
-
-  if (header != constant.HEADER_CREATE_SCHEDULER) return res.status(400).json({ "data": "error" });
+  const stopTime = req.body.stopTime;
   
   const startTimeMinute = parseInt(startTime.split(':')[0]) * 60 + parseInt(startTime.split(':')[1]);
-  const endTimeMinute = parseInt(endTime.split(':')[0]) * 60 + parseInt(endTime.split(':')[1]);
+  const stopTimeMinute = parseInt(stopTime.split(':')[0]) * 60 + parseInt(stopTime.split(':')[1]);
   
   //call mqttService for publish message to topic <gardenID>
-  mqttService.publish(gardenID, `${constant.HEADER_CREATE_SCHEDULER}:${typeDevice}:${pin}:${action}:${startTimeMinute}:${endTimeMinute}`);
+  mqttService.publish(gardenID, `${constant.HEADER_CREATE_SCHEDULER}:${typeDevice}:${pin}:${action}:${startTimeMinute}:${stopTimeMinute}`);
   //call service to add to database
-  //add to database startTime with action is turn on
-  //add to database endTime with action is turn off
+  
 
   res.status(200).json({ "data": "create scheduler" });
 }
 
+const getScheduler = async (req, res) => {
+  const gardenID = req.body.gardenID;
+  //call service get all scheduler of garden
+  //EX:
+  const scheduler = [
+    {
+      schedulerID: 1,
+      action: 1,
+      startTime:  `${17*60+30}`,
+      endTime: `${18*60}`,
+      outputDeviceID: 5
+    },
+    {
+      schedulerID: 2,
+      action: 0,
+      startTime: `${6*60+30}`,
+      endTime: `${7*60}`,
+      outputDeviceID: 6
+    }
+  ]
+
+  res.status(200).json({ "data": scheduler });
+}
 
 let postDevice = async (req, res) => {
   
@@ -228,7 +248,7 @@ let postDevice = async (req, res) => {
   // for (let i = 0; i < nameDevices.length; i++) {
   //   switch (nameDevices[i]) {
   //     case "AirSensor":
-  //       updateSensor.setInputPin(pins[i], constant.TYPE_DHT_SENSOR);
+  //       updateSensor.setInputPin(pins[i], constant.);
   //       break;
   //     case "HumiSoilSensor":
   //       updateSensor.setInputPin(pins[i], constant.TYPE_SOIL_SENSOR);
@@ -255,21 +275,21 @@ let postDevice = async (req, res) => {
   const devices = nameDevices.map((name, index) => {
     let typeDevice = decodeDeviceNametoNumber(name);
     if (typeDevice == -1) return null;
-    if (typeDevice == constant.TYPE_DHT_SENSOR) {
-      return {
-        name: decodeDeviceNametoString(name),
-        pin: pins[index],
-        typeDevice: typeDevice,
-        value: ["0", "0"]
-      }
-    } else {
-      return {
-        name: decodeDeviceNametoString(name),
-        pin: pins[index],
-        typeDevice: typeDevice,
-        value: ["0"]
-      }
-    }
+    // if (typeDevice == constant.) {
+    //   return {
+    //     name: decodeDeviceNametoString(name),
+    //     pin: pins[index],
+    //     typeDevice: typeDevice,
+    //     value: ["0", "0"]
+    //   }
+    // } else {
+    //   return {
+    //     name: decodeDeviceNametoString(name),
+    //     pin: pins[index],
+    //     typeDevice: typeDevice,
+    //     value: ["0"]
+    //   }
+    // }
   }).flat().filter(device => device !== null);
   console.log(devices)
   // Tên tệp JSON
@@ -295,4 +315,5 @@ module.exports = {
   controlDevice: controlDevice,
   createDevice: createDevice,
   createScheduler: createScheduler,
+  getScheduler: getScheduler
 }

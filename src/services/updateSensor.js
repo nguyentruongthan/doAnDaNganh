@@ -22,7 +22,7 @@ function setInputPin(pin, typeSensor){
   }
   else if(pin[0] === "D"){
     // Digital Pin
-    if (typeSensor === constant.TYPE_DHT_SENSOR ||
+    if (typeSensor === constant.TYPE_TEMP_SENSOR ||
       typeSensor === constant.TYPE_DIGITAL_OUTPUT ||
       typeSensor === constant.TYPE_DIGITAL_SERVO) {
       message += `${typeSensor}:`
@@ -57,7 +57,7 @@ function deleteInputPin(pin, typeSensor){
   }
   else if(pin[0] === "D"){
     // # Digital Pin
-    if (typeSensor === constant.TYPE_DHT_SENSOR) {
+    if (typeSensor === constant.TYPE_HUMIDITY_SENSOR) {
       message += typeSensor
     }
     else {

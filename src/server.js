@@ -7,6 +7,10 @@ import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import SocketServices from './services/socketIOService';
 import mqttClient from './controllers/mqttClientController';
+import mongoose from 'mongoose';
+import userRouter from './route/user';
+import gardenRouter from './route/garden';
+import deviceRouter from './route/device';
 
 require("dotenv").config();
 
@@ -27,7 +31,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/public/', express.static('./public'));
 
 initWebRoutes(app);
-
+app.use("/api/user", userRouter);
+app.use("/api/garden", gardenRouter);	
+app.use("/api/device", deviceRouter);
 viewEngine(app);
 
 
@@ -43,6 +49,16 @@ global._io.on('connection',
   SocketServices.connection)
 
 let port = process.env.PORT || 6969;
+
+
+mongoose.connect(
+  `mongodb+srv://linhnguyen123:${process.env.PASSWORD_DB}@cluster0.qflosao.mongodb.net/Node-API?retryWrites=true&w=majority&appName=Cluster0`
+  
+)
+.then(() => {
+  console.log('Connected to mongodb');
+})
+.catch((err) => console.log(err))
 
 server.listen(port, () => {
   console.log(`Server running at: http://localhost:${port}`);

@@ -11,6 +11,7 @@ let initWebRoutes = (app) => {
   router.post('/api/controlDevice', homeController.controlDevice);
   router.post('/api/createDevice', homeController.createDevice);
   router.post('/api/createScheduler', homeController.createScheduler);
+  router.get('/api/getScheduler', homeController.getScheduler);
   router.post('/devices', homeController.postDevice);
   return app.use("/", router)
 }

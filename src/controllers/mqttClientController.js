@@ -70,7 +70,7 @@ class MQTTClient {
       //  message format: {header}:{data}
       const header = splitMessage[0];
       if (header === constant.HEADER_SENSOR_VALUE.toString()) {
-        _io.emit(`${gardenID}`, message);
+        _io.emit(`${gardenID} ${constant.HEADER_SENSOR_VALUE}`, message);
       } else if (header === constant.HEADER_ACK.toString()) {
         eventService.mqttEvent.emit(`${message}`, "");
       }

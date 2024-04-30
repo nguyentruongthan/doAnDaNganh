@@ -222,10 +222,6 @@
             const sensorsContainer = document.querySelector(".overview");
             const outputDevicesTable = document.querySelector(".table tbody");
 
-            const humiAirSensor = document.getElementById("humiAirSensor");
-            const tempSensor = document.getElementById("tempSensor");
-            const lightSensor = document.getElementById("lightSensor");
-            const humiSoilSensor = document.getElementById("humiSoilSensor");
 
             const reloadContainer = document.querySelector(".reloadContainer");
         </script>
@@ -247,7 +243,7 @@
                             </span>
                                 <div class="d-flex flex-column align-items-center">
                                     <span class="text">Ánh sáng</span>
-                                    <span class="text" id="lightSensor">${value[0]} Lux</span>
+                                    <span class="text" id="lightSensor">${value} Lux</span>
                                 </div>
                         </div>
                     `
@@ -259,11 +255,24 @@
                             </span>
                                 <div class="d-flex flex-column align-items-center">
                                     <span class="text">Độ ẩm đất</span>
-                                    <span class="text" id="humiSoilSensor">${value[0]}%</span>
+                                    <span class="text" id="humiSoilSensor">${value}%</span>
                                 </div>
                         </div>
                     `
-                }else if(type === 2){//dht sensensor
+                }else if(type === 2){//humi air sensensor
+                    return `
+                        <div class="title">
+                            <span class="material-symbols-outlined icon">
+                                ${iconNames.doAmKhongKhi}
+                            </span>
+                                <div class="d-flex flex-column align-items-center">
+                                    <span class="text">Độ ẩm không khí</span>
+                                    <span class="text" id="humiAirSensor">${value}%</span>
+                                </div>
+                        </div>
+                        
+                    `
+                }else if(type === 3){
                     return `
                         <div class="title">
                             <span class="material-symbols-outlined icon">
@@ -271,23 +280,11 @@
                             </span>
                                 <div class="d-flex flex-column align-items-center">
                                     <span class="text">Nhiệt độ</span>
-                                    <span class="text" id="tempSensor">${value[0]}℃</span>
+                                    <span class="text" id="tempSensor">${value}℃</span>
                                 </div>
                         </div>
-                        <div class="title">
-                            <span class="material-symbols-outlined icon">
-                                ${iconNames.doAmKhongKhi}
-                            </span>
-                                <div class="d-flex flex-column align-items-center">
-                                    <span class="text">Độ ẩm không khí</span>
-                                    <span class="text" id="humiAirSensor">${value[1]}%</span>
-                                </div>
-                        </div>
-                        
-                    `
-                }else{
-                    return "";
-                }
+                    `;
+                }else return "";
                 
             }
             
@@ -297,7 +294,7 @@
             });
         </script>
         <script>// create output device component
-            const outputDeviceComponent = (index, name, pin, value) => {
+            const outputDeviceComponent = (index, id, name, pin, value) => {
                 return `
                     <tr>
                         <th scope="row">${index}</th>
@@ -306,8 +303,8 @@
                         <td>
                             <div class="form-check form-switch d-flex justify-content-center">
                                 ${value === "1" ? 
-                                    `<input class='form-check-input outputDevice' type='checkbox' role='switch' id='${pin}' checked>` :
-                                    `<input class='form-check-input outputDevice' type='checkbox' role='switch' id='${pin}'>`}
+                                    `<input class='form-check-input outputDevice' type='checkbox' role='switch' id='${id}' pin='${pin}' checked>` :
+                                    `<input class='form-check-input outputDevice' type='checkbox' role='switch' id='${id}' pin='${pin}'>`}
                             </div>
                         </td>
                     </tr>
@@ -315,9 +312,9 @@
             }
             let indexOutputDevice = 1;
             devices.forEach((device) => {
-                if(device.type != "3") return;
+                if(device.type != "4") return;
                 outputDevicesTable.innerHTML += 
-                    outputDeviceComponent(indexOutputDevice++, device.deviceName, device.pin, device.value);
+                    outputDeviceComponent(indexOutputDevice++, device.deviceID, device.deviceName, device.pin, device.value);
             });
 
             const outputDevices = document.querySelectorAll(".outputDevice");
@@ -337,9 +334,9 @@
                             },
                             body: JSON.stringify({
                                 "gardenID": "farm1",
-                                "header": "3", //<HEADER_CONTROL_DEVICE>
                                 "typeDevice": "3", //Digital output device
-                                "pin": `${e.target.id}`, //pin of device
+                                "pin": `${e.target.getAttribute('pin')}`, //pin of device
+                                "deviceID": `${e.target.id}`, //id of device	
                                 "value": `${e.target.checked ? "1" : "0"}`
                             })
                         })
@@ -365,12 +362,16 @@
         <script src="socket.io/socket.io.js"></script>
         <script>// socketIO
             const socket = io();
-
+            const humiAirSensor = document.getElementById("humiAirSensor");
+            const tempSensor = document.getElementById("tempSensor");
+            const lightSensor = document.getElementById("lightSensor");
+            const humiSoilSensor = document.getElementById("humiSoilSensor");
             //example for username and garden
             const username = "qwe";
             const gardenID = "farm1"
 
-            socket.on(`${gardenID}`, (msg) => {
+            socket.on(`${gardenID} 2`, (msg) => {
+                
                 let splitMessage = [];
                 if(typeof(msg) != "string"){
                     const decoder = new TextDecoder('utf-8'); 
@@ -389,8 +390,9 @@
                     }else if(type === "1"){
                         humiSoilSensor.innerText = `${value}%`;
                     }else if(type === "2"){
+                        humiAirSensor.innerText = `${value} %`;
+                    }else if(type === "3"){
                         tempSensor.innerText = `${value} °C`;
-                        humiAirSensor.innerText = `${splitMessage[4]} %`;
                     }
                 }
             })
