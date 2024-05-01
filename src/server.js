@@ -11,7 +11,7 @@ import mongoose from 'mongoose';
 import userRouter from './route/user';
 import gardenRouter from './route/garden';
 import deviceRouter from './route/device';
-
+import LogRouter from './route/ActivityLog';
 require("dotenv").config();
 
 let app = express();
@@ -34,6 +34,7 @@ initWebRoutes(app);
 app.use("/api/user", userRouter);
 app.use("/api/garden", gardenRouter);	
 app.use("/api/device", deviceRouter);
+app.use("/api/activityLog", LogRouter);
 viewEngine(app);
 
 
@@ -52,7 +53,7 @@ let port = process.env.PORT || 6969;
 
 
 mongoose.connect(
-  `mongodb+srv://linhnguyen123:${process.env.PASSWORD_DB}@cluster0.qflosao.mongodb.net/Node-API?retryWrites=true&w=majority&appName=Cluster0`
+  `mongodb+srv://linhnguyen123:linhnguyen123@cluster0.qflosao.mongodb.net/Node-API?retryWrites=true&w=majority&appName=Cluster0`
   
 )
 .then(() => {
