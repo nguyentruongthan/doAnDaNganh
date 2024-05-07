@@ -4,7 +4,9 @@ import constant from '../services/constant';
 import deviceService from '../services/deviceService';
 import mqttService from '../services/mqttService';
 import eventService from '../services/eventService';
+import activityLogService from '../services/activityLogService';
 // import updateSensor from "../services/updateSensor"; 
+
 
 function decodeDeviceNametoNumber(nameDevice) {
   switch (nameDevice) {
@@ -55,50 +57,17 @@ let getDashBoard = async (req, res) => {
   //call service to get device according username and gardenID
   //TODO
   //Ex: list device id is
-  const devices = [
-    {
-      deviceID: 1,
-      value: "34",
-      pin: "P0",
-      type: "0", //Light sensor
-      deviceName: "Ánh sáng"
-    },
-    {
-      deviceID: 2,
-      value: "68",
-      pin: "P1",
-      type: "1", //Humi soil sensor
-      deviceName: "Độ ẩm đất"
-    },
-    {
-      deviceID: 3,
-      value: "78",
-      pin: "P19",
-      type: "2", // Humi air sensor
-      deviceName: "Độ ẩm không khí"
-    },
-    {
-      deviceID: 4,
-      value: "32.4",
-      pin: "P19",
-      type: "3", //Temp sensor
-      deviceName: "Nhiệt độ"
-    },
-    {
-      deviceID: 5,
-      value: "0",
-      pin: "P2",
-      type: "4", //Light output
-      deviceName: "Đèn 1"
-    },
-    {
-      deviceID: 6,
-      value: "1",
-      pin: "P3",
-      type: "4", //Pump output
-      deviceName: "Máy bơm 1"
-    },
-  ]
+  const username = 'nguyentruongthan';
+  const devices = await deviceService.getAllDevicesByUsername(username);
+  
+  // {
+  //   deviceID: 1,
+  //   value: "34",
+  //   pin: "P0",
+  //   type: "0", //Light sensor
+  //   deviceName: "Ánh sáng"
+  // }
+    
   return res.render(
     'dashBoard.ejs',
     { data: devices }
@@ -309,28 +278,62 @@ let postDevice = async (req, res) => {
 }
 
 const getNhietDo = async (req, res) => {
+  const username = 'nguyentruongthan';
+  const type = constant.TYPE_TEMP_SENSOR;
+  //call service to get device
+  const devices = await deviceService.getDevicesByUsernameAndType(username, type);
+  if (devices.length === 0) {
+    return res.status(404).json("Device not found");
+  }
   return res.render(
     'nhietDo.ejs',
-    {data: "34"}
+    {device: devices[0]}
   );
 }
 const getDoAmKhongKhi = async (req, res) => {
+  const username = 'nguyentruongthan';
+  const type = constant.TYPE_HUMIAIR_SENSOR;
+  //call service to get device
+  const devices = await deviceService.getDevicesByUsernameAndType(username, type);
+  if (devices.length === 0) {
+    return res.status(404).json("Device not found");
+  }
   return res.render(
     'doAmKhongKhi.ejs',
-    {data: "84"}
+    {device: devices[0]}
   );
 }
 const getDoAmDat = async (req, res) => {
+  const username = 'nguyentruongthan';
+  const type = constant.TYPE_SOIL_SENSOR;
+  //call service to get device
+  const devices = await deviceService.getDevicesByUsernameAndType(username, type);
+  if (devices.length === 0) {
+    return res.status(404).json("Device not found");
+  }
   return res.render(
     'doAmDat.ejs',
-    {data: "55"}
+    {device: devices[0]}
   );
 }
 const getAnhSang = async (req, res) => {
+  const username = 'nguyentruongthan';
+  const type = constant.TYPE_LIGHT_SENSOR;
+  //call service to get device
+  const devices = await deviceService.getDevicesByUsernameAndType(username, type);
+  if (devices.length === 0) {
+    return res.status(404).json("Device not found");
+  }
+
   return res.render(
     'anhSang.ejs',
-    {data: "65"}
+    {device: devices[0]}
   );
+}
+const getLapLich = async (req, res) => {
+  return res.render(
+    'lapLich.ejs'
+  )
 }
 module.exports = {
   getHomePage: getHomePage,
@@ -344,5 +347,6 @@ module.exports = {
   getNhietDo: getNhietDo,
   getDoAmKhongKhi: getDoAmKhongKhi,
   getDoAmDat: getDoAmDat,
-  getAnhSang: getAnhSang
+  getAnhSang: getAnhSang,
+  getLapLich: getLapLich
 }

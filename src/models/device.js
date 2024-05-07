@@ -15,9 +15,9 @@ const deviceSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  gardenID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Garden"
+  username: {
+    type: String,
+    required: true
   }
 });
 

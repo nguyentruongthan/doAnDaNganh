@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 const outputDeviceSchema = new mongoose.Schema({
   deviceID: {
     type: mongoose.Schema.Types.ObjectId,
+    required: true,
     ref: "Device"
   }
 });

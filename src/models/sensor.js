@@ -2,7 +2,8 @@ import mongoose from 'mongoose';
 const sensorSchema = new mongoose.Schema({
   deviceID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Device"
+    ref: "Device",
+    required: true
   }
 });
 

@@ -1,9 +1,34 @@
 import userModel from '../models/user.js';
+import deviceService from '../services/deviceService.js';
 
 const addUser = async (req, res) => {
   try {
     const newUser = new userModel.User(req.body);
     const saveUser = await newUser.save();
+    deviceService.addDevice({
+      type: 0,
+      pin: "P0",
+      deviceName: "Ánh sáng",
+      username: req.body.username
+    });
+    deviceService.addDevice({
+      type: 1,
+      pin: "P1",
+      deviceName: "Độ ẩm đất",
+      username: req.body.username
+    });
+    deviceService.addDevice({
+      type: 2,
+      pin: "P19",
+      deviceName: "Độ ẩm không khí",
+      username: req.body.username
+    });
+    deviceService.addDevice({
+      type: 3,
+      pin: "P19",
+      deviceName: "Nhiệt độ",
+      username: req.body.username
+    });
     res.status(200).json(saveUser);
   } catch (err) {
     res.status(500).json(err);

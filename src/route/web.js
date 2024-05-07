@@ -17,6 +17,7 @@ let initWebRoutes = (app) => {
   router.get('/doAmKhongKhi', homeController.getDoAmKhongKhi);
   router.get('/doAmDat', homeController.getDoAmDat);
   router.get('/anhSang', homeController.getAnhSang);
+  router.get('/lapLich', homeController.getLapLich);
   return app.use("/", router)
 }
 

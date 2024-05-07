@@ -219,6 +219,7 @@
         </script>
         <script>// variable
             const devices = JSON.parse('<%- JSON.stringify(data) %>');
+            console.log(devices);
             const sensorsContainer = document.querySelector(".overview");
             const outputDevicesTable = document.querySelector(".table tbody");
             //example for username and garden
@@ -234,54 +235,55 @@
                 anhSang: "wb_sunny"
             };
             
-            const sensorComponent = (type, value, pin) => {
-                type = parseInt(type);
+            const sensorComponent = (device) => {
+                const type = parseInt(device.type);
+                const deviceID = device._id;
                 if(type === 0){//light sensor
                     return `
-                        <div class="title">
+                        <div class="title" id='${deviceID}'>
                             <span class="material-symbols-outlined icon">
                                 ${iconNames.anhSang}
                             </span>
                                 <div class="d-flex flex-column align-items-center">
                                     <span class="text">Ánh sáng</span>
-                                    <span class="text" id="lightSensor">${value} Lux</span>
+                                    <span class="text" id="lightSensor"><span class='value'></span> Lux</span>
                                 </div>
                         </div>
                     `
                 }else if(type === 1){//humidity soil sensor
                     return `
-                        <div class="title">
+                        <div class="title" id='${deviceID}'>
                             <span class="material-symbols-outlined icon">
                                 ${iconNames.doAmDat}
                             </span>
                                 <div class="d-flex flex-column align-items-center">
                                     <span class="text">Độ ẩm đất</span>
-                                    <span class="text" id="humiSoilSensor">${value}%</span>
+                                    <span class="text" id="humiSoilSensor"><span class='value'></span>%</span>
                                 </div>
                         </div>
                     `
                 }else if(type === 2){//humi air sensensor
                     return `
-                        <div class="title">
+                        <div class="title" id='${deviceID}'>
                             <span class="material-symbols-outlined icon">
                                 ${iconNames.doAmKhongKhi}
                             </span>
                                 <div class="d-flex flex-column align-items-center">
                                     <span class="text">Độ ẩm không khí</span>
-                                    <span class="text" id="humiAirSensor">${value}%</span>
+                                    <span class="text" id="humiAirSensor"><span class='value'></span>%</span>
                                 </div>
                         </div>
                         
                     `
                 }else if(type === 3){
                     return `
-                        <div class="title">
+                        <div class="title" id='${deviceID}'>
                             <span class="material-symbols-outlined icon">
                                 ${iconNames.nhietDo}
                             </span>
                                 <div class="d-flex flex-column align-items-center">
                                     <span class="text">Nhiệt độ</span>
-                                    <span class="text" id="tempSensor">${value}℃</span>
+                                    <span class="text" id="tempSensor"><span class='value'></span>℃</span>
                                 </div>
                         </div>
                     `;
@@ -291,7 +293,7 @@
             
             
             devices.forEach((device) => {
-                sensorsContainer.innerHTML += sensorComponent(device.type, device.value.split(","));
+                sensorsContainer.innerHTML += sensorComponent(device);
             });
         </script>
         <script>// create output device component
@@ -360,6 +362,26 @@
                 })
             })
         </script>
+        <script>//call api get latest value
+            devices.forEach((device) => {
+                const deviceID = device._id
+                const resLatestValue = 
+                    fetch(
+                        `http://localhost:8080/api/activityLog/${deviceID}/latest`,
+                        {method: "GET"}
+                    )
+                    .then((res) => {
+                        if(res.ok) return res.json();
+                        else return {value: "0"};
+                    })
+                    .then((result) => {
+                        const deviceComponent = document.getElementById(deviceID);
+                        if(!deviceComponent) return;
+                        deviceComponent.querySelector('.value').innerText = result.value
+                    });
+            });
+
+        </script>
         <script src="socket.io/socket.io.js"></script>
         <script>// socketIO
             const socket = io();
@@ -370,7 +392,7 @@
             
 
             socket.on(`${username} 2`, (msg) => {
-                // console.log(msg);
+                // message format: header:deviceID:value
                 let splitMessage = [];
                 if(typeof(msg) != "string"){
                     const decoder = new TextDecoder('utf-8'); 
@@ -380,20 +402,11 @@
                     splitMessage = msg.split(':');
                 }
                 const header = splitMessage[0];
-                const type = splitMessage[1];
-                const pin = splitMessage[2];
-                const value = splitMessage[3];
-                if(header === "2"){//HEADER_SENSOR_VALUE
-                    if(type === "0"){
-                        lightSensor.innerText = `${value} LUX`;
-                    }else if(type === "1"){
-                        humiSoilSensor.innerText = `${value}%`;
-                    }else if(type === "2"){
-                        humiAirSensor.innerText = `${value} %`;
-                    }else if(type === "3"){
-                        tempSensor.innerText = `${value} °C`;
-                    }
-                }
+                const deviceID = splitMessage[1];
+                const value = splitMessage[2];
+                const deviceComponent = document.getElementById(deviceID);
+                if(!deviceComponent) return;
+                deviceComponent.querySelector('.value').innerText = value;
             })
         </script>
     </body>

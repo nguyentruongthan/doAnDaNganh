@@ -13,6 +13,7 @@ const activityLogSchema = new mongoose.Schema({
   },
   deviceID: {
     type: mongoose.Schema.Types.ObjectId,
+    required: true,
     ref: "Device"
   }
 });
