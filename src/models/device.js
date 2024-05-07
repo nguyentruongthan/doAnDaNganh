@@ -1,8 +1,5 @@
 import mongoose from 'mongoose';
 const deviceSchema = new mongoose.Schema({
-  deviceID: {
-    type: mongoose.Schema.Types.ObjectId,
-  },
   pin: {
     type: String,
     required: true

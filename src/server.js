@@ -11,6 +11,7 @@ import mongoose from 'mongoose';
 import userRouter from './route/user';
 import deviceRouter from './route/device';
 import LogRouter from './route/activityLog';
+import schedulerRouter from './route/scheduler';
 require("dotenv").config();
 
 let app = express();
@@ -35,6 +36,7 @@ initWebRoutes(app);
 app.use("/api/user", userRouter);
 app.use("/api/device", deviceRouter);
 app.use("/api/activityLog", LogRouter);
+app.use("/api/scheduler", schedulerRouter);
 viewEngine(app);
 
 

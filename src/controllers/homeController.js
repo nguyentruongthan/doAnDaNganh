@@ -5,6 +5,7 @@ import deviceService from '../services/deviceService';
 import mqttService from '../services/mqttService';
 import eventService from '../services/eventService';
 import activityLogService from '../services/activityLogService';
+import schedulerService from '../services/schedulerService';
 // import updateSensor from "../services/updateSensor"; 
 
 
@@ -55,18 +56,8 @@ let getHomePage = async (req, res) => {
 
 let getDashBoard = async (req, res) => {
   //call service to get device according username and gardenID
-  //TODO
-  //Ex: list device id is
   const username = 'nguyentruongthan';
   const devices = await deviceService.getAllDevicesByUsername(username);
-  
-  // {
-  //   deviceID: 1,
-  //   value: "34",
-  //   pin: "P0",
-  //   type: "0", //Light sensor
-  //   deviceName: "Ánh sáng"
-  // }
     
   return res.render(
     'dashBoard.ejs',
@@ -331,9 +322,22 @@ const getAnhSang = async (req, res) => {
   );
 }
 const getLapLich = async (req, res) => {
+  //get all scheduler by username
+  const username = 'nguyentruongthan';
+  const devices = await deviceService.getAllDevicesByUsername(username);
   return res.render(
-    'lapLich.ejs'
+    'lapLich.ejs',
+    {data: devices}
   )
+}
+const getCaiDatThoiGian = async (req, res) => {
+  const username = 'nguyentruongthan';
+  const devices = await deviceService.getAllDevicesByUsername(username);
+  return res.render(
+    'caiDatThoiGian.ejs',
+    {data: devices}
+  )
+
 }
 module.exports = {
   getHomePage: getHomePage,
@@ -348,5 +352,6 @@ module.exports = {
   getDoAmKhongKhi: getDoAmKhongKhi,
   getDoAmDat: getDoAmDat,
   getAnhSang: getAnhSang,
-  getLapLich: getLapLich
+  getLapLich: getLapLich,
+  getCaiDatThoiGian: getCaiDatThoiGian
 }
