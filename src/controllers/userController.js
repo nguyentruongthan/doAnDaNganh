@@ -1,5 +1,6 @@
 import userModel from '../models/user.js';
-
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 const addUser = async (req, res) => {
   try {
     const newUser = new userModel.User(req.body);
@@ -21,7 +22,9 @@ const loginUser = async (req, res) => {
     if(user.password !== req.body.password){
       return res.status(400).json("Wrong password");
     }
-    res.status(200).json(user);
+    const token = jwt.sign({ userId: user._id }, 'your_secret_key', { expiresIn: '1h' });
+    res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
+    res.json({ message: 'Login successfully!' });
   } catch (err) {
     res.status(500).json(err);
   }

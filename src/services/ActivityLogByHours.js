@@ -14,11 +14,11 @@ const getHourlyLog= async (req, res) => {
         const endOfHour = new Date(startOfDay);
         endOfHour.setHours(i + 1, 59, 59, 999);
   
-        // Latest Log
+        // Find latest Log for each time slot
         const latestLog = await ActivityLog.findOne({
           deviceID,
           timestamp: { $gte: startOfHour, $lte: endOfHour }
-        }).sort({ timestamp: -1 }).limit(1);
+        }).sort({ timestamp: 1 }).limit(1);
   
         hourlyLogs.push(latestLog || null);
       }

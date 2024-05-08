@@ -20,6 +20,4 @@ const activityLogSchema = new mongoose.Schema({
 
 let ActivityLog = mongoose.model('ActivityLog', activityLogSchema);
 
-export default {
-  ActivityLog: ActivityLog
-}
+export default ActivityLog;
