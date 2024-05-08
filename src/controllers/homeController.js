@@ -115,13 +115,11 @@ let getDevices = async (req, res) => {
 const controlDevice = async (req, res) => {
   console.log(req.body);
   const username = req.body.username;
-  const typeDevice = req.body.typeDevice;
-  const pin = req.body.pin;
   const deviceID = req.body.deviceID;
   const value = req.body.value;
   const ack = Date.now()
 
-  const message = `${constant.HEADER_CONTROL_DEVICE}:${typeDevice}:${pin}:${value}:${ack}`
+  const message = `${constant.HEADER_CONTROL_DEVICE}:${deviceID}:${value}:${ack}`
   //call mqttService for publish message to topic <gardenID>
   mqttService.publish(username, message)
   
@@ -132,7 +130,7 @@ const controlDevice = async (req, res) => {
   await eventService.mqttEvent.once(`${constant.HEADER_ACK}:${ack}`, () => {
     clearTimeout(timeout);
     //call service to add to database
-    //TODO
+    activityLogService.addActivityLog(deviceID, value);
     res.status(200).json({ "result": "success" });
   });
   
@@ -337,8 +335,22 @@ const getCaiDatThoiGian = async (req, res) => {
     'caiDatThoiGian.ejs',
     {data: devices}
   )
-
 }
+
+const getChinhSuaThoiGian = async (req, res) => {
+  const username = 'nguyentruongthan';
+  const schedulerID = req.params.schedulerID;
+  const scheduler = await schedulerService.getSchedulerByID(schedulerID);
+  const devices = await deviceService.getAllDevicesByUsername(username);
+  return res.render(
+    'chinhSuaThoiGian.ejs',
+    {
+      scheduler: scheduler,
+      devices: devices
+    }
+  )
+}
+
 module.exports = {
   getHomePage: getHomePage,
   getDashBoard: getDashBoard,
@@ -353,5 +365,6 @@ module.exports = {
   getDoAmDat: getDoAmDat,
   getAnhSang: getAnhSang,
   getLapLich: getLapLich,
-  getCaiDatThoiGian: getCaiDatThoiGian
+  getCaiDatThoiGian: getCaiDatThoiGian,
+  getChinhSuaThoiGian: getChinhSuaThoiGian
 }

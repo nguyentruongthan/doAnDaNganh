@@ -47,11 +47,13 @@ class MQTTClient {
 
       const header = parseInt(splitMessage[0]);
       let devices;
+      let deviceID;
+      let value;
       switch (header) {
         case constant.HEADER_SENSOR_VALUE: //recv sensor data
           //message format: {header}:{deviceID}:{value}
-          const deviceID = splitMessage[1];
-          const value = splitMessage[2];
+          deviceID = splitMessage[1];
+          value = splitMessage[2];
           // send data to UI throgh socket IO
           _io.emit(`${username} ${constant.HEADER_SENSOR_VALUE}`, message);
           // call service add activity log
@@ -79,6 +81,18 @@ class MQTTClient {
             }
           }
           this.publish(username, `${constant.HEADER_CREATE_SCHEDULER}:${JSON.stringify(schedulers)}`);
+          break;
+        case constant.HEADER_GET_LATEST_VALUE: //req for get latest value of device
+          //message format: <HEADER_GET_LATEST_VALUE>:<deviceID>
+          // call service to get latest value
+          deviceID = splitMessage[1];
+          const latestLog = await activityLogService.getLatestDeviceLog(deviceID);
+          if(!latestLog) {
+            value = "0"
+          } else {
+            value = latestLog.value;
+          }
+          this.publish(username, `${constant.HEADER_LATEST_VALUE}:${deviceID}:${value}`);
           break;
       }
       

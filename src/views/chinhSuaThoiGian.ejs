@@ -81,73 +81,73 @@
             </header>
 
             <div class="menu-bar">
-                <div class="menu">
-                    <li class="search-box">
-                        <i class="bx bx-search icon"></i>
-                        <input type="text" placeholder="Search..." />
+              <div class="menu">
+                <li class="search-box">
+                    <i class="bx bx-search icon"></i>
+                    <input type="text" placeholder="Search..." />
+                </li>
+
+                <ul class="menu-link">
+                    <li class="nav-link">
+                        <a href="http://localhost:8080/dashBoard">
+                            <i class="bx bx-home-alt icon"></i>
+                            <span class="text nav-text"
+                                >Điều khiển động cơ</span
+                            >
+                        </a>
                     </li>
 
-                    <ul class="menu-link">
-                        <li class="nav-link">
-                            <a href="http://localhost:8080/dashBoard">
-                                <i class="bx bx-home-alt icon"></i>
-                                <span class="text nav-text"
-                                    >Điều khiển động cơ</span
-                                >
-                            </a>
-                        </li>
+                    <li class="nav-link">
+                        <a href="http://localhost:8080/nhietDo">
+                            <!-- <i class="bx bx-bar-chart-alt-2 icon"></i> -->
+                            <span class="material-symbols-outlined icon">
+                                device_thermostat
+                            </span>
+                            <span class="text nav-text">Nhiệt độ</span>
+                        </a>
+                    </li>
 
-                        <li class="nav-link">
-                            <a href="http://localhost:8080/nhietDo">
-                                <!-- <i class="bx bx-bar-chart-alt-2 icon"></i> -->
-                                <span class="material-symbols-outlined icon">
-                                    device_thermostat
-                                </span>
-                                <span class="text nav-text">Nhiệt độ</span>
-                            </a>
-                        </li>
+                    <li class="nav-link">
+                        <a href="http://localhost:8080/doAmDat">
+                            <!-- <i class="bx bx-bell icon"></i> -->
+                            <span class="material-symbols-outlined icon">
+                                humidity_mid
+                            </span>
+                            <span class="text nav-text">Độ ẩm đất</span>
+                        </a>
+                    </li>
 
-                        <li class="nav-link">
-                            <a href="http://localhost:8080/doAmDat">
-                                <!-- <i class="bx bx-bell icon"></i> -->
-                                <span class="material-symbols-outlined icon">
-                                    humidity_mid
-                                </span>
-                                <span class="text nav-text">Độ ẩm đất</span>
-                            </a>
-                        </li>
+                    <li class="nav-link">
+                        <a href="http://localhost:8080/doAmKhongKhi">
+                            <!-- <i class="bx bx-pie-chart-alt icon"></i> -->
+                            <span class="material-symbols-outlined icon">
+                                humidity_percentage
+                            </span>
+                            <span class="text nav-text"
+                                >Độ ẩm không khí</span
+                            >
+                        </a>
+                    </li>
 
-                        <li class="nav-link">
-                            <a href="http://localhost:8080/doAmKhongKhi">
-                                <!-- <i class="bx bx-pie-chart-alt icon"></i> -->
-                                <span class="material-symbols-outlined icon">
-                                    humidity_percentage
-                                </span>
-                                <span class="text nav-text"
-                                    >Độ ẩm không khí</span
-                                >
-                            </a>
-                        </li>
+                    <li class="nav-link">
+                        <a href="http://localhost:8080/anhSang">
+                            <span class="material-symbols-outlined icon">
+                                wb_sunny
+                            </span>
+                            <span class="text nav-text">Ánh sáng</span>
+                        </a>
+                    </li>
 
-                        <li class="nav-link">
-                            <a href="http://localhost:8080/anhSang">
-                                <span class="material-symbols-outlined icon">
-                                    wb_sunny
-                                </span>
-                                <span class="text nav-text">Ánh sáng</span>
-                            </a>
-                        </li>
-
-                        <li class="nav-link">
-                            <a href="http://localhost:8080/lapLich">
-                                <i class="bx bx-wallet icon"></i>
-                                <span class="text nav-text"
-                                    >Cài đặt thời gian</span
-                                >
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                    <li class="nav-link">
+                        <a href="http://localhost:8080/lapLich">
+                            <i class="bx bx-wallet icon"></i>
+                            <span class="text nav-text"
+                                >Cài đặt thời gian</span
+                            >
+                        </a>
+                    </li>
+                </ul>
+              </div>
 
                 <div class="bottom-content">
                     <li class="">
@@ -253,7 +253,7 @@
                                             class="form-select"
                                             aria-label=".form-select-lg example"
                                         >
-                                            <option selected value="">
+                                            <option value="">
                                                 Chọn Tên động cơ
                                             </option>
                                             <!-- JS -->
@@ -303,7 +303,7 @@
                                             type="button"
                                             class="btn btn-primary btnSubmit"
                                         >
-                                            Đặt
+                                            Cập nhật
                                         </button>
                                     </td>
                                 </tr>
@@ -365,13 +365,38 @@
             });
         </script>
         <script>//create options for select output device
-            const devices = JSON.parse('<%- JSON.stringify(data) %>');
+            const devices = JSON.parse('<%- JSON.stringify(devices) %>');
+            const scheduler = JSON.parse('<%- JSON.stringify(scheduler) %>');
+            console.log(devices, scheduler);
             const selectDeviceElement = document.querySelector('.form-select');
-            devices.forEach((device) => {
+            let indexOutputDevice = 1;
+            let indexSelecedDevice = 0;
+            devices.forEach((device, index) => {
                 if(device.type === '4'){
-                    selectDeviceElement.innerHTML += `<option value="${device._id}">${device.deviceName}</option>`;
+                    
+                    selectDeviceElement.innerHTML += 
+                      `
+                        <option value="${device._id}" >${device.deviceName}</option>
+                      `;
+                    // console.log(device._id === scheduler.outputID)
+                    if(device._id === scheduler.outputID){
+                      indexSelecedDevice = indexOutputDevice;
+                    }
+                  indexOutputDevice++;
                 }
             })
+            selectDeviceElement.selectedIndex = indexSelecedDevice;
+            //init start time and stop time
+            const startTimeElement = document.querySelector('.startTime');
+            const stopTimeElement = document.querySelector('.stopTime');
+            const startHour = Math.floor(scheduler.start_time/60) < 10 ? `0${Math.floor(scheduler.start_time/60)}` : `${Math.floor(scheduler.start_time/60)}`;
+            const startMinute = scheduler.start_time%60 < 10 ? `0${scheduler.start_time%60}` : `${scheduler.start_time%60}`;
+            const stopHour = Math.floor(scheduler.stop_time/60) < 10 ? `0${Math.floor(scheduler.stop_time/60)}` : `${Math.floor(scheduler.stop_time/60)}`;
+            const stopMinute = scheduler.stop_time%60 < 10 ? `0${scheduler.stop_time%60}` : `${scheduler.stop_time%60}`;
+            startTimeElement.value = `${startHour}:${startMinute}`;
+            stopTimeElement.value = `${stopHour}:${stopMinute}`;
+            //init select device
+
         </script>
         <script>//handle submit scheduler time
             const btnSubmit = document.querySelector('.btnSubmit');
@@ -394,8 +419,8 @@
                     return;
                 }
                 //call api to create scheduler
-                const res = await fetch('/api/scheduler', {
-                    method: 'POST',
+                const res = await fetch(`/api/scheduler/${scheduler._id}`, {
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -409,8 +434,8 @@
                 
                 if(res.ok){
                     const responseData = await res.json();
-                    console.log(responseData.scheduler);
-                    if(window.confirm('Đặt lịch thành công.\n Nhấn đồng ý để tải lại trang')){
+                    console.log(responseData);
+                    if(window.confirm('Cập nhật lịch thành công.\n Nhấn đồng ý để tải lại trang')){
                         window.location.reload();
                     }
                 }else {

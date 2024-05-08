@@ -35,6 +35,7 @@ const getAllSchedulersByOutputID = async (req, res) => {
 
 const updateSchedulerByID = async (req, res) => {
   try {
+    const username = 'nguyentruongthan';
     const schedulerID = req.params.schedulerID;
     //find by schedulerID
     const scheduler = await schedulerModel.Scheduler.findById(schedulerID);
@@ -45,9 +46,15 @@ const updateSchedulerByID = async (req, res) => {
       return res.status(400).json("Cannot update scheduler");
     }
     //update device table
-    await scheduler.updateOne({
+    const updateScheduler = await scheduler.updateOne({
       $set : req.body
     })
+    scheduler.start_time = req.body.start_time;
+    scheduler.stop_time = req.body.stop_time;
+    scheduler.outputID = req.body.outputID;
+    
+    // send update scheduler to IoT Gateway
+    mqttService.publish(username, `${constant.HEADER_CREATE_SCHEDULER}:[${JSON.stringify(scheduler)}]`);
     res.status(200).json("Update scheduler successfully");
   } catch (err) {
     res.status(500).json(err);

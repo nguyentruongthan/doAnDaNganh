@@ -61,7 +61,7 @@
 
                     <ul class="menu-link">
                         <li class="nav-link">
-                            <a href="./index.html">
+                            <a href="http://localhost:8080/dashBoard">
                                 <i class="bx bx-home-alt icon"></i>
                                 <span class="text nav-text"
                                     >Điều khiển động cơ</span
@@ -70,7 +70,7 @@
                         </li>
 
                         <li class="nav-link">
-                            <a href="#">
+                            <a href="http://localhost:8080/nhietDo">
                                 <!-- <i class="bx bx-bar-chart-alt-2 icon"></i> -->
                                 <span class="material-symbols-outlined icon">
                                     device_thermostat
@@ -80,7 +80,7 @@
                         </li>
 
                         <li class="nav-link">
-                            <a href="#">
+                            <a href="http://localhost:8080/doAmDat">
                                 <!-- <i class="bx bx-bell icon"></i> -->
                                 <span class="material-symbols-outlined icon">
                                     humidity_mid
@@ -90,7 +90,7 @@
                         </li>
 
                         <li class="nav-link">
-                            <a href="#">
+                            <a href="http://localhost:8080/doAmKhongKhi">
                                 <!-- <i class="bx bx-pie-chart-alt icon"></i> -->
                                 <span class="material-symbols-outlined icon">
                                     humidity_percentage
@@ -102,7 +102,7 @@
                         </li>
 
                         <li class="nav-link">
-                            <a href="#">
+                            <a href="http://localhost:8080/anhSang">
                                 <span class="material-symbols-outlined icon">
                                     wb_sunny
                                 </span>
@@ -111,7 +111,7 @@
                         </li>
 
                         <li class="nav-link">
-                            <a href="./lapLich">
+                            <a href="http://localhost:8080/lapLich">
                                 <i class="bx bx-wallet icon"></i>
                                 <span class="text nav-text"
                                     >Cài đặt thời gian</span
@@ -211,6 +211,7 @@
                         <tr>
                             <th scope="col">Số thứ tự</th>
                             <th scope="col">Tên động cơ</th>
+                            <th scope="col">Pin</th>
                             <th scope="col">Thời gian bắt đầu</th>
                             <th scope="col">Thời gian kết thúc</th>
                             <th scope="col">Hủy thiết lập</th>
@@ -277,6 +278,7 @@
                         <tr>
                             <th scope="row">${index + 1}</th>
                             <td>${device.deviceName}</td>
+                            <td>${device.pin}</td>
                             <td>${Math.floor(scheduler.start_time/60)}:${scheduler.start_time%60 < 10 ? `0${scheduler.start_time%60}` : scheduler.start_time%60}</td>
                             <td>${Math.floor(scheduler.stop_time/60)}:${scheduler.stop_time%60 < 10 ? `0${scheduler.stop_time%60}` : scheduler.stop_time%60}</td>
                             <td>
@@ -284,6 +286,11 @@
                                     type="button" class="btn btn-danger btnDeleteScheduler"
                                     >
                                     Xóa
+                                </button>
+                                <button 
+                                    type="button" class="btn btn-danger btnUpdateScheduler"
+                                    >
+                                    Cập nhật
                                 </button>
                             </td>
                         </tr>
@@ -304,6 +311,13 @@
                                 alert('Xóa thất bại');
                             }
                     })
+                    })
+                })
+                const btnUpdateSchedulers = document.querySelectorAll('.btnUpdateScheduler')
+                btnUpdateSchedulers.forEach((btnUpdateScheduler, index) => {
+                    btnUpdateScheduler.addEventListener('click', () => {
+                        const schedulerID = schedulers[index]._id
+                        window.location.href = `/chinhSuaThoiGian/${schedulerID}`
                     })
                 })
             })

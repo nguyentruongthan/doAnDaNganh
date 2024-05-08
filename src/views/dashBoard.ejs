@@ -102,7 +102,7 @@
                         </li>
 
                         <li class="nav-link">
-                            <a href="#">
+                            <a href="http://localhost:8080/lapLich">
                                 <i class="bx bx-wallet icon"></i>
                                 <span class="text nav-text"
                                     >Cài đặt thời gian</span
@@ -296,17 +296,15 @@
             });
         </script>
         <script>// create output device component
-            const outputDeviceComponent = (index, id, name, pin, value) => {
+            const outputDeviceComponent = (index, deviceID, name, pin) => {
                 return `
-                    <tr>
+                    <tr id=${deviceID}>
                         <th scope="row">${index}</th>
                         <td>${name}</td>
                         <td>${pin}</td>
                         <td>
                             <div class="form-check form-switch d-flex justify-content-center">
-                                ${value === "1" ? 
-                                    `<input class='form-check-input outputDevice' type='checkbox' role='switch' id='${id}' pin='${pin}' checked>` :
-                                    `<input class='form-check-input outputDevice' type='checkbox' role='switch' id='${id}' pin='${pin}'>`}
+                                <input class='form-check-input outputDevice value' type='checkbox' role='switch' />
                             </div>
                         </td>
                     </tr>
@@ -316,9 +314,8 @@
             devices.forEach((device) => {
                 if(device.type != "4") return;
                 outputDevicesTable.innerHTML += 
-                    outputDeviceComponent(indexOutputDevice++, device.deviceID, device.deviceName, device.pin, device.value);
+                    outputDeviceComponent(indexOutputDevice++, device._id, device.deviceName, device.pin);
             });
-
             const outputDevices = document.querySelectorAll(".outputDevice");
             outputDevices.forEach((outputDevice) => {
                 outputDevice.addEventListener('click', async (e) => {
@@ -336,9 +333,7 @@
                             },
                             body: JSON.stringify({
                                 "username": username,
-                                "typeDevice": "3", //Digital output device
-                                "pin": `${e.target.getAttribute('pin')}`, //pin of device
-                                "deviceID": `${e.target.id}`, //id of device	
+                                "deviceID": `${e.target.parentNode.parentNode.parentNode.id}`, //id of device	
                                 "value": `${e.target.checked ? "1" : "0"}`
                             })
                         })
@@ -374,9 +369,14 @@
                         else return {value: "0"};
                     })
                     .then((result) => {
+                        const value = result.value;
                         const deviceComponent = document.getElementById(deviceID);
                         if(!deviceComponent) return;
-                        deviceComponent.querySelector('.value').innerText = result.value
+                        if(deviceComponent.querySelector('.value').tagName === "SPAN"){
+                            deviceComponent.querySelector('.value').innerText = value;
+                        }else if(deviceComponent.querySelector('.value').tagName === "INPUT"){
+                            deviceComponent.querySelector('.value').checked = value === "1";
+                        }
                     });
             });
 
@@ -384,11 +384,6 @@
         <script src="socket.io/socket.io.js"></script>
         <script>// socketIO
             const socket = io();
-            const humiAirSensor = document.getElementById("humiAirSensor");
-            const tempSensor = document.getElementById("tempSensor");
-            const lightSensor = document.getElementById("lightSensor");
-            const humiSoilSensor = document.getElementById("humiSoilSensor");
-            
 
             socket.on(`${username} 2`, (msg) => {
                 // message format: header:deviceID:value
@@ -405,7 +400,11 @@
                 const value = splitMessage[2];
                 const deviceComponent = document.getElementById(deviceID);
                 if(!deviceComponent) return;
-                deviceComponent.querySelector('.value').innerText = value;
+                if(deviceComponent.querySelector('.value').tagName === "SPAN"){
+                    deviceComponent.querySelector('.value').innerText = value;
+                }else if(deviceComponent.querySelector('.value').tagName === "INPUT"){
+                    deviceComponent.querySelector('.value').checked = value === "1";
+                }
             })
         </script>
     </body>
