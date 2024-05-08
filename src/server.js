@@ -13,6 +13,8 @@ import deviceRouter from './route/device';
 import LogRouter from './route/activityLog';
 import schedulerRouter from './route/scheduler';
 import ruleRouter from './route/rule';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 require("dotenv").config();
 
 let app = express();
