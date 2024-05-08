@@ -12,6 +12,7 @@ import userRouter from './route/user';
 import deviceRouter from './route/device';
 import LogRouter from './route/activityLog';
 import schedulerRouter from './route/scheduler';
+import ruleRouter from './route/rule';
 require("dotenv").config();
 
 let app = express();
@@ -37,6 +38,7 @@ app.use("/api/user", userRouter);
 app.use("/api/device", deviceRouter);
 app.use("/api/activityLog", LogRouter);
 app.use("/api/scheduler", schedulerRouter);
+app.use("/api/rule", ruleRouter);	
 viewEngine(app);
 
 

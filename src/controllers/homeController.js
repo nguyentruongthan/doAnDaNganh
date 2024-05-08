@@ -351,6 +351,10 @@ const getChinhSuaThoiGian = async (req, res) => {
   )
 }
 
+const getDangNhap = async (req, res) => {
+  return res.render('dangNhap.ejs');
+}
+
 module.exports = {
   getHomePage: getHomePage,
   getDashBoard: getDashBoard,
@@ -366,5 +370,6 @@ module.exports = {
   getAnhSang: getAnhSang,
   getLapLich: getLapLich,
   getCaiDatThoiGian: getCaiDatThoiGian,
-  getChinhSuaThoiGian: getChinhSuaThoiGian
+  getChinhSuaThoiGian: getChinhSuaThoiGian,
+  getDangNhap: getDangNhap
 }

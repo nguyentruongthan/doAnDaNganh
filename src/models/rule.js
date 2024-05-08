@@ -5,11 +5,13 @@ const ruleSchema = new mongoose.Schema({
   },
   sensorID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Sensor"
+    ref: "Sensor",
+    required: true
   },
   outputID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "OutputDevice"
+    ref: "OutputDevice",
+    required: true
   },
   threshold: {
     type: String,

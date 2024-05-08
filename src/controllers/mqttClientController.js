@@ -4,7 +4,7 @@ import eventService from '../services/eventService';
 import deviceService from '../services/deviceService.js';
 import schedulerService from '../services/schedulerService.js';
 import activityLogService from '../services/activityLogService.js';
-
+import ruleService from '../services/ruleService.js';
 
 class MQTTClient {
   publish(topic, message) {
@@ -93,6 +93,12 @@ class MQTTClient {
             value = latestLog.value;
           }
           this.publish(username, `${constant.HEADER_LATEST_VALUE}:${deviceID}:${value}`);
+          break;
+        case constant.HEADER_GET_RULE: //req for get rule
+          //message format: <HEADER_GET_RULE>:<deviceID>
+          deviceID = splitMessage[1];
+          const rules = await ruleService.getAllRulesByOutputID(deviceID);
+          this.publish(username, `${constant.HEADER_CREATE_RULE}:${JSON.stringify(rules)}`);
           break;
       }
       
