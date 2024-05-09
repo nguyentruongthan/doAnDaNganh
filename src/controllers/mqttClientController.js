@@ -5,7 +5,7 @@ import deviceService from '../services/deviceService.js';
 import schedulerService from '../services/schedulerService.js';
 import activityLogService from '../services/activityLogService.js';
 import ruleService from '../services/ruleService.js';
-
+import userService from '../services/userService.js';
 class MQTTClient {
   publish(topic, message) {
     if (!this.client || !this.client.connected) {
@@ -99,6 +99,11 @@ class MQTTClient {
           deviceID = splitMessage[1];
           const rules = await ruleService.getAllRulesByOutputID(deviceID);
           this.publish(username, `${constant.HEADER_CREATE_RULE}:${JSON.stringify(rules)}`);
+          break;
+        case constant.HEADER_GET_IS_AUTO: //req for get isAuto
+          //message format: <HEADER_GET_IS_AUTO>
+          const isAuto = await userService.getIsAuto(username);
+          this.publish(username, `${constant.HEADER_CREATE_IS_AUTO}:${isAuto}`);
           break;
       }
       

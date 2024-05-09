@@ -1,6 +1,8 @@
 import userModel from '../models/user.js';
 import deviceService from '../services/deviceService.js';
 import jwt from 'jsonwebtoken';
+import mqttService from '../services/mqttService.js';
+import constant from '../services/constant.js';
 const addUser = async (req, res) => {
   try {
     const newUser = new userModel.User(req.body);
@@ -29,9 +31,7 @@ const addUser = async (req, res) => {
       deviceName: "Nhiệt độ",
       username: req.body.username
     });
-    const token = jwt.sign({ userId: user._id }, 'your_secret_key', { expiresIn: '1h' });
-    res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
-    res.json({ message: 'Login successfully!' });
+    
   } catch (err) {
     res.status(500).json(err);
   }
@@ -48,12 +48,41 @@ const loginUser = async (req, res) => {
     if(user.password !== req.body.password){
       return res.status(400).json("Wrong password");
     }
-    res.status(200).json(user);
+    const token = jwt.sign({ username: user.username }, 'your_secret_key', { expiresIn: '1h' });
+    res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
+    return res.status.json({ message: 'Login successfully!' });
+    // res.status(200).json(user);
   } catch (err) {
     res.status(500).json(err);
   }
 }
+const getIsAuto = async (req, res) => {
+  try {
+    const user = await userModel.User.findOne({ username: req.params.username });
+    return res.status(200).json(user.isAuto);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+}
+const updateIsAuto = async (req, res) => {
+  try {
+    const username = 'nguyentruongthan'
+    const user = await userModel.User.findOne({ username: req.params.username });
+    user.isAuto = req.body.isAuto;
+    await user.updateOne({
+      $set: user
+    });
+    mqttService.publish(username, `${constant.HEADER_CREATE_IS_AUTO}:${user.isAuto}`);
+    return res.status(200).json(user.isAuto);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+}
 module.exports = {
   addUser: addUser,
-  loginUser: loginUser
+  loginUser: loginUser,
+  getIsAuto: getIsAuto,
+  updateIsAuto: updateIsAuto
 };

@@ -34,17 +34,22 @@ const addRules = async (outputID, action, sensorRules) => {
     });
     const saveOutputRule = await newOutputRule.save();
     const outputRuleID = saveOutputRule._id;
-
+    const newSensorRules = []
     for (let i = 0; i < sensorRules.length; i++) {
-      await sensorRuleModel.SensorRule.create({
+      const newSensorRule = await sensorRuleModel.SensorRule.create({
         'outputRuleID': outputRuleID,
         'sensorID': sensorRules[i]['sensorID'],
         'threshold': sensorRules[i]['threshold'],
         'condition': sensorRules[i]['condition']
       });
+      newSensorRules.push(newSensorRule);
     }
-
-    return saveOutputRule;
+    const result = {
+      'outputRule': saveOutputRule,
+      'sensorRules': newSensorRules
+    }
+    
+    return result;
   } catch (err) {
     return err;
   }

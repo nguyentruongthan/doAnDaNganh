@@ -8,6 +8,7 @@ import activityLogService from '../services/activityLogService';
 import schedulerService from '../services/schedulerService';
 // import updateSensor from "../services/updateSensor"; 
 import ruleService from '../services/ruleService';
+import userService from '../services/userService';
 
 function decodeDeviceNametoNumber(nameDevice) {
   switch (nameDevice) {
@@ -55,13 +56,17 @@ let getHomePage = async (req, res) => {
 }
 
 let getDashBoard = async (req, res) => {
-  //call service to get device according username and gardenID
+  //call service to get device according username
   const username = 'nguyentruongthan';
   const devices = await deviceService.getAllDevicesByUsername(username);
-    
+  //call service get isAuto of username
+  const isAuto = await userService.getIsAuto(username);
   return res.render(
     'dashBoard.ejs',
-    { data: devices }
+    {
+      data: devices,
+      isAuto: isAuto
+    }
   );
   
 }

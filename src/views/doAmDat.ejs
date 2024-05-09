@@ -261,7 +261,7 @@
                 return res.json();
               })
               .then((result) => {
-                tempElenment.style.setProperty('--value', result.value);
+                tempElenment.style.setProperty('--value', parseInt(result.value));
               });
             const username = "nguyentruongthan";
           </script>
@@ -314,9 +314,11 @@
               });
     
       </script>
+      <script src="socket.io/socket.io.js"></script>
       <script>// socketIO
         const socket = io();
         socket.on(`${username} 2`, (msg) => {
+                console.log(msg);
               //message format: header:deviceID:value
               let splitMessage = [];
               if(typeof(msg) != "string"){
@@ -331,7 +333,7 @@
               const value = splitMessage[2];
               if(header === "2"){//HEADER_SENSOR_VALUE
                 if(deviceID === device._id){
-                    tempElenment.style.setProperty('--value', value);
+                    tempElenment.style.setProperty('--value', parseInt(value));
                 }
               }
           })

@@ -196,6 +196,25 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <tr>
+                            <th scope="row"></th>
+                            <td><input type='text' class="form-control" placeholder="Tên động cơ"/></td>
+                            <td>
+                                <select class="form-select" aria-label="Default select example">
+                                    <option selected value="">Chọn Pin</option>
+                                    <option >P2</option>
+                                    <option >P3</option>
+                                    <option >P6</option>
+                                    <option >P10</option>
+                                    <option >P13</option>
+                                    <option >P14</option>
+                                    <option >P15</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btnCreateDevice">Thêm mới thiết bị</button>
+                            </td>
+                        </tr>
                         <!-- JS -->
                     </tbody>
                 </table>
@@ -227,36 +246,10 @@
                 }
             });
         </script>
-        <script>
-            const autoButton = document.querySelector(".home .mode .auto-button");
-            const manualButton = document.querySelector(".home .mode .manual-button");
-            // const listControl = document.querySelector(".home .list-control");
-            
-            //click vào nút "Tự động"
-            autoButton.addEventListener("click", function () {
-                
-                // Hiển thị phần tử div
-                // listControl.style.display = "block"; // Hiển thị phần tử
-                autoButton.classList.remove("btn-danger");
-                autoButton.classList.add("btn-primary");
-                //
-                manualButton.classList.remove("btn-primary");
-                manualButton.classList.add("btn-danger");
-            });
-            // click vào nút "Thủ công"
-            manualButton.addEventListener("click", function () {
-                // Ẩn đi phần tử div
-                // listControl.style.display = "none"; // Ẩn đi phần tử
-
-                manualButton.classList.remove("btn-danger");
-                manualButton.classList.add("btn-primary");
-                //
-                autoButton.classList.remove("btn-primary");
-                autoButton.classList.add("btn-danger");
-            });
-        </script>
         <script>// variable
             const devices = JSON.parse('<%- JSON.stringify(data) %>');
+            let isAuto = JSON.parse('<%- JSON.stringify(isAuto) %>');
+            console.log(isAuto);
             const sensorsContainer = document.querySelector(".overview");
             const outputDevicesTable = document.querySelector(".table tbody");
             //example for username and garden
@@ -264,6 +257,9 @@
 
             const reloadContainer = document.querySelector(".reloadContainer");
         </script>
+        
+        
+        
         <script>// create sensor component
             const iconNames = {
                 nhietDo: "device_thermostat",
@@ -443,6 +439,122 @@
                 }else if(deviceComponent.querySelector('.value').tagName === "INPUT"){
                     deviceComponent.querySelector('.value').checked = value === "1";
                 }
+            })
+        </script>
+        <script>
+            const autoButton = document.querySelector(".home .mode .auto-button");
+            const manualButton = document.querySelector(".home .mode .manual-button");
+            const updateUIIsAuto = () => {
+                const input = document.querySelectorAll(".outputDevice");
+                if(isAuto === "1"){
+                    autoButton.classList.remove("btn-danger");
+                    autoButton.classList.add("btn-primary");
+                    manualButton.classList.remove("btn-primary");
+                    manualButton.classList.add("btn-danger");
+                    input.forEach((element) => {
+                        element.disabled = true;
+                    });
+                    
+                }else{
+                    manualButton.classList.remove("btn-danger");
+                    manualButton.classList.add("btn-primary");
+                    autoButton.classList.remove("btn-primary");
+                    autoButton.classList.add("btn-danger");
+                    input.forEach((element) => {
+                        element.disabled = false;
+                    });
+                }
+            }
+            updateUIIsAuto();
+            //click vào nút "Tự động"
+            autoButton.addEventListener("click", function () {
+                if(isAuto === "1"){
+                    return;
+                }else{
+                    //call api to put isAuto = true to server
+                    fetch(`http://localhost:8080/api/user/isAuto/${username}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            isAuto: "1",
+                        }),
+                    }).then((res) => {
+                        if (res.ok) {
+                            isAuto = "1";
+                            // Hiển thị phần tử div
+                            updateUIIsAuto();
+                        } else {
+                            alert("Không thể chuyển sang chế độ tự động");
+                        }
+                    })
+                }
+            });
+            // click vào nút "Thủ công"
+            manualButton.addEventListener("click", function () {
+                if(isAuto === "0"){
+                    return;
+                }else{
+                    //call api to put isAuto = true to server
+                    fetch(`http://localhost:8080/api/user/isAuto/${username}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            isAuto: "0",
+                        }),
+                    }).then((res) => {
+                        if (res.ok) {
+                            isAuto = "0";
+                            updateUIIsAuto();
+                        } else {
+                            alert("Không thể chuyển sang chế độ tự động");
+                        }
+                    })
+                }
+            });
+        </script>
+        <script>
+            const btnCreateDevice = document.querySelector('.btnCreateDevice');
+            btnCreateDevice.addEventListener('click', (e) => {
+                const row = e.target.parentNode.parentNode;
+                const deviceName = row.querySelector('.form-control')
+                const devicePin = row.querySelector('.form-select')
+                if(deviceName.value === "" || devicePin.value === ""){
+                    alert("Vui lòng nhập đầy đủ thông tin");
+                    return;
+                }
+
+                console.log(deviceName.value, devicePin.value);
+                for(let i = 0; i < devices.length; i++){
+                    if(devices[i].pin === devicePin.value){
+                        alert("Pin đã tồn tại");
+                        return;
+                    }
+                }
+                fetch('http://localhost:8080/api/device', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "username": username,
+                        "deviceName": deviceName.value,
+                        "pin": devicePin.value,
+                        "type": "4"
+                    })
+                }).then(res => {
+                    if(res.status === 200){
+                        if(window.confirm('Thêm thiết bị thành công. \n Nhấn đồng ý để reload lại trang')){
+                            window.location.reload();
+                        }
+                    }else{
+                        alert('Thêm thiết bị thất bại');
+                    }
+                })
+
             })
         </script>
     </body>

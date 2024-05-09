@@ -248,7 +248,7 @@
             });
         })
        </script>
-      <script src="socket.io/socket.io.js"></script>
+
       
       <script> // call api get latest value
         const device = JSON.parse('<%- JSON.stringify(device) %>');
@@ -264,7 +264,7 @@
             return res.json();
           })
           .then((result) => {
-            tempElenment.style.setProperty('--value', result.value);
+            tempElenment.style.setProperty('--value', parseInt(result.value));
           });
       </script>
       <script>//call api get hourly chart
@@ -316,10 +316,12 @@
           });
 
         </script>
+        <script src="socket.io/socket.io.js"></script>
         <script>// socketIO
           const socket = io();
           socket.on(`${username} 2`, (msg) => {
               //message format: header:deviceID:value
+              console.log(msg)
               let splitMessage = [];
               if(typeof(msg) != "string"){
                   const decoder = new TextDecoder('utf-8'); 
@@ -333,7 +335,7 @@
               const value = splitMessage[2];
               if(header === "2"){//HEADER_SENSOR_VALUE
                 if(deviceID === device._id){
-                    tempElenment.style.setProperty('--value', value);
+                    tempElenment.style.setProperty('--value', parseInt(value));
                 }
               }
           })

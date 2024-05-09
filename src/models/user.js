@@ -7,6 +7,10 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+  isAuto: {
+    type: String,
+    required: true
   }
 });
 
