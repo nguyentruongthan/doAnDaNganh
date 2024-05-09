@@ -1,6 +1,7 @@
 import ruleModel from '../models/rule.js';
-import outputDeviceModel from '../models/outputDevice.js';
-import ruleSevice from '../services/ruleService.js';
+// import outputDeviceModel from '../models/outputDevice.js';
+import ruleService from '../services/ruleService.js';
+
 const addRule = async (req, res) => {
   try {
     const newRule = new ruleModel.Rule(req.body);
@@ -15,30 +16,42 @@ const addRule = async (req, res) => {
 const getAllRulesByOutputID = async (req, res) => {
   try {
     const outputID = req.params.outputID;
-    const rules = await ruleSevice.getAllRulesByOutputID(outputID);
+    const rules = await ruleService.getAllRulesByOutputID(outputID);
     res.status(200).json(rules);
   }catch(err){
     res.status(500).json(err);
   }
 }
 
-const updateRuleByID = async (req, res) => {
+const updateRuleByOutputRuleID = async (req, res) => {
   try {
-    const ruleID = req.params.ruleID;
-    //find by ruleID
-    const rule = await ruleModel.Rule.findById(ruleID);
-    if(!rule){
-      res.status(404).json("Rule not found");
+    const outputRuleReq = req.body['outputRule'];
+    const sensorRulesReq = req.body['sensorRules'];
+    
+    //find output rule by id
+    const outputRule = await ruleService.getOutputRuleByOutputRuleID(outputRuleReq._id);
+    if (!outputRule) {
+      return res.status(404).json("Output rule not found");
     }
-    if(rule.type != req.body.type){
-      res.status(400).json("Cannot update rule");
-    }
-    //update device table
-    await rule.updateOne({
-      $set : req.body
+    //update output rule
+    const newOutputRule = await outputRule.updateOne({
+      $set: outputRuleReq
     })
-    res.status(200).json("Update rule successfully");
+    //update sensor rule by sensorRuleID
+    
+    for (let i = 0; i < sensorRulesReq.length; i++){
+      // console.log('sensorRule: ', sensorRulesReq[i]);
+      const sensorRule = await ruleService.getSensorRuleBySensorRuleID(sensorRulesReq[i]._id);
+      if(!sensorRule){
+        return res.status(404).json("Sensor rule not found");
+      }
+      await sensorRule.updateOne({
+        $set: sensorRulesReq[i]
+      })
+    }
+    res.status(200).json(newOutputRule);
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 }
@@ -56,23 +69,52 @@ const getRuleByID = async (req, res) => {
   }
 }
 
-const deleteRuleByID = async (req, res) => {
+const deleteRuleByOutputRuleID = async (req, res) => {
   try {
-    const ruleID = req.params.ruleID;
-    const rule = await ruleModel.Rule.findByIdAndDelete(ruleID);
-    if (!rule) {
-      res.status(404).json("Rule not found");
-    }
-    res.status(200).json(rule);
+    const deleteOutputRule = await ruleService.deleteRuleByOutputRuleID(req.params.outputRuleID);
+    res.status(200).json(deleteOutputRule);
   } catch (err) {
     res.status(500).send(err);
   }
 }
 
+const addRules = async (req, res) => {
+  try {
+    const outputID = req.body['outputID'];
+    const action = req.body['action'];
+    const sensorRules = req.body['sensorRules'];
+    const outputRule = await ruleService.addRules(outputID, action, sensorRules);
+    res.status(200).json(outputRule);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+}
+const getOutputRuleByOutputRuleID = async (req, res) => {
+  try{
+    const outputRuleID = req.params.outputRuleID;
+    const outputRule = await ruleService.getOutputRuleByOutputRuleID(outputRuleID);
+    res.status(200).json(outputRule);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+}
+const getSensorRuleByOutputRuleID = async (req, res) => {
+  try {
+    const outputRuleID = req.params.outputRuleID;
+    const sensorRules = await ruleService.getSensorRuleByOutputRuleID(outputRuleID);
+    res.status(200).json(sensorRules);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+
+}
 module.exports = {
   addRule: addRule,
   getAllRulesByOutputID: getAllRulesByOutputID,
-  deleteRuleByID: deleteRuleByID,
-  updateRuleByID: updateRuleByID,
-  getRuleByID: getRuleByID
+  deleteRuleByOutputRuleID: deleteRuleByOutputRuleID,
+  updateRuleByOutputRuleID: updateRuleByOutputRuleID,
+  getRuleByID: getRuleByID,
+  addRules: addRules,
+  getOutputRuleByOutputRuleID: getOutputRuleByOutputRuleID,
+  getSensorRuleByOutputRuleID: getSensorRuleByOutputRuleID
 };

@@ -1,6 +1,5 @@
-import ActivityLog from '../models/activityLog.js'; 
+import activityLog from '../models/activityLog.js'; 
 import activityLogService from '../services/activityLogService.js';
-import deviceService from '../services/deviceService.js';
 
 const addActivityLog = async (req, res) => {
   try {
@@ -36,7 +35,7 @@ const getDailyLog = async (req, res) => {
     endOfDay.setHours(23, 59, 59, 999);
 
     // Find Logs for that day
-    const logs = await ActivityLog.ActivityLog.find({
+    const logs = await activityLog.ActivityLog.find({
       deviceID,
       timestamp: { $gte: startOfDay, $lte: endOfDay }
     });
@@ -63,10 +62,10 @@ const getHourlyLog = async (req, res) => {
       endOfHour.setHours(i + 1, 59, 59, 999);
 
       // Latest Log
-      const latestLog = await ActivityLog.ActivityLog.findOne({
+      const latestLog = await activityLog.ActivityLog.findOne({
         deviceID,
         timestamp: { $gte: startOfHour, $lte: endOfHour }
-      }).sort({ timestamp: -1 }).limit(1);
+      }).sort({ timestamp: 1 }).limit(1);
 
       hourlyLogs.push(latestLog || null);
     }

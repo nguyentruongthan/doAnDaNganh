@@ -187,19 +187,17 @@
             </div>
             <!-- Cài đặt thời gian -->
             <div class="p-4">
-                <div class="text">Thiết lập thời gian</div>
+                <div class="text">Thiết lập điều kiện</div>
                 <div class="home-content">
                     <div class="overview d-flex justify-content-end p-3 gap-5">
                         <div
                             class="title d-flex align-items-center justify-content-center"
                         >
                             <span class="material-symbols-outlined">
-                                event
+                                rule_folder
                             </span>
-                            <a href="/lapLich"
-                                ><span class="sub-text icon"
-                                    >Đã đặt lịch</span
-                                ></a
+                            <a href="/nguongCamBien"
+                                ><span class="sub-text icon">Điều kiện</span></a
                             >
                         </div>
                         <div
@@ -208,9 +206,9 @@
                             <span class="material-symbols-outlined">
                                 add_circle
                             </span>
-                            <a href="/caiDatThoiGian"
+                            <a href="/caiDatNguongCamBien"
                                 ><span class="sub-text icon"
-                                    >Chọn thời gian</span
+                                    >Chọn điều kiện</span
                                 ></a
                             >
                         </div>
@@ -222,31 +220,36 @@
                             <th scope="col">Số thứ tự</th>
                             <th scope="col">Tên động cơ</th>
                             <th scope="col">Pin</th>
-                            <th scope="col">Thời gian bắt đầu</th>
-                            <th scope="col">Thời gian kết thúc</th>
-                            <th scope="col">Hủy thiết lập</th>
+                            <th scope="col">Nhiệt độ</th>
+                            <th scope="col">Độ ẩm không khí</th>
+                            <th scope="col">Độ ẩm đất</th>
+                            <th scope="col">Ánh sáng</th>
+                            <th scope="col">Thiết lập</th>
                         </tr>
                     </thead>
                     <tbody>
-<!--                         
-                        <tr>
+                        <!-- <tr>
                             <th scope="row">1</th>
                             <td>Động cơ phun sương</td>
-                            <td>18:00:00</td>
-                            <td>18:30:00</td>
+                            <td>1</td>
+                            <td>>30</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
                             <td>
                                 <button type="button" class="btn btn-danger">
                                     Hủy
                                 </button>
+                                <button type="button" class="btn btn-primary">
+                                    Cập nhật
+                                </button>
                             </td>
                         </tr> -->
-                        
                     </tbody>
                 </table>
             </div>
         </section>
         <script>
-            
             const body = document.querySelector("body"),
                 sidebar = body.querySelector("nav"),
                 toggle = body.querySelector(".toggle"),
@@ -272,68 +275,104 @@
                 }
             });
         </script>
-        <script>
-            const devices = JSON.parse('<%- JSON.stringify(data) %>');
+        <script>//call api get device
+            const devices = JSON.parse('<%- JSON.stringify(devices) %>');
+            const devicesJson = {}
+            devices.forEach(device => {
+                devicesJson[device._id] = device;
+            })
         </script>
-        <script> //call api get all scheduler by user name
-            const username = 'nguyentruongthan'
-            fetch(`http://localhost:8080/api/scheduler/username/${username}`)
-            .then(res => res.json())
-            .then(schedulers => {
-                schedulers.forEach((scheduler, index) => {
-                    // console.log(scheduler)
-                    const tbody = document.querySelector('tbody')
-                    const device = devices.find(device => device._id === scheduler.outputID)
-                    tbody.innerHTML += `
-                        <tr>
-                            <th scope="row">${index + 1}</th>
-                            <td>${device.deviceName}</td>
-                            <td>${device.pin}</td>
-                            <td>${Math.floor(scheduler.start_time/60)}:${scheduler.start_time%60 < 10 ? `0${scheduler.start_time%60}` : scheduler.start_time%60}</td>
-                            <td>${Math.floor(scheduler.stop_time/60)}:${scheduler.stop_time%60 < 10 ? `0${scheduler.stop_time%60}` : scheduler.stop_time%60}</td>
-                            <td>
-                                <button 
-                                    type="button" class="btn btn-danger btnDeleteScheduler"
-                                    >
-                                    Xóa
-                                </button>
-                                <button 
-                                    type="button" class="btn btn-primary btnUpdateScheduler"
-                                    >
-                                    Cập nhật
-                                </button>
-                            </td>
-                        </tr>
-                    `
-                });
-                const btnDeleteSchedulers = document.querySelectorAll('.btnDeleteScheduler')
-                btnDeleteSchedulers.forEach((btnDeleteScheduler, index) => {
-                    btnDeleteScheduler.addEventListener('click', async () => {
-                        // console.log(schedulers[index])
-                        fetch(`http://localhost:8080/api/scheduler/${schedulers[index]._id}`,{
-                            method: 'DELETE'
-                        }).then((res) => {
-                            if(res.status === 200){
-                                if(window.confirm('Xóa thành công. \n Nhấn đồng ý để tải lại trang')){
-                                    window.location.reload()
+        <script>//get all rule by deviceID
+            const tbody = document.querySelector('tbody');
+            let indexRule = 0;
+            devices.forEach((device, index) => {
+                //filter output device
+                if(device.type !== '4')
+                    return
+                fetch(`/api/rule/all/${device._id}`)
+                .then(res => res.json())
+                .then(rules => {
+                    
+                    for(let i = 0; i < rules.length; i++){
+                        const rule = rules[i];
+                        const outputRule = rule['outputRule'];
+                        const sensorRules = rule['sensorRules'];
+
+                        const outputRuleID = outputRule['_id'];
+                        const outputID = outputRule['outputID'];
+                        const outputDevice = devicesJson[outputID];
+                        const action = outputRule['action'];
+
+                        let lightThreshold = '';
+                        let humiSoilThreshold = '';
+                        let humiThreshold = '';
+                        let tempThreshold = '';
+
+                        for(let j = 0; j < sensorRules.length; j++){
+                            sensorRule = sensorRules[j];
+                            const sensorID = sensorRule['sensorID'];
+                            if(devicesJson[sensorID].type === '0')
+                                lightThreshold = `${sensorRule['condition']} ${sensorRule['threshold']}`;
+                            else if(devicesJson[sensorID].type === '1')
+                                humiSoilThreshold = `${sensorRule['condition']} ${sensorRule['threshold']}`;
+                            else if(devicesJson[sensorID].type === '2')
+                                humiThreshold = `${sensorRule['condition']} ${sensorRule['threshold']}`;
+                            else if(devicesJson[sensorID].type === '3')
+                                tempThreshold = `${sensorRule['condition']} ${sensorRule['threshold']}`;
+                        }
+
+                        tbody.innerHTML += `
+                            <tr id=${outputRuleID}>
+                                <th scope="row">${++indexRule}</th>
+                                <td>${outputDevice.deviceName}</td>
+                                <td>${outputDevice.pin}</td>
+                                <td>${tempThreshold}</td>
+                                <td>${humiThreshold}</td>
+                                <td>${humiSoilThreshold}</td>
+                                <td>${lightThreshold}</td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btnDeleteRule">
+                                        Hủy
+                                    </button>
+                                    <button type="button" class="btn btn-primary btnUpdateRule">
+                                        Cập nhật
+                                    </button>
+                                </td>
+                            </tr>
+                        `
+                    }
+                    const btnUpdateRules = document.querySelectorAll('.btnUpdateRule');
+                    btnUpdateRules.forEach((btnUpdateRule, outputRuleIndex) => {
+                        btnUpdateRule.addEventListener('click', (e) => {
+                            e.preventDefault()
+                            const row = e.target.closest('tr');
+                            const outputRuleID = row.id;
+                            window.location.href = `/chinhSuaNguongCamBien/${outputRuleID}`;
+                        })
+                    })
+                    const btnDeleteRules = document.querySelectorAll('.btnDeleteRule');
+                    btnDeleteRules.forEach((btnDeleteRule, outputRuleIndex) => {
+                        btnDeleteRule.addEventListener('click', (e) => {
+                            e.preventDefault()
+                            const row = e.target.closest('tr');
+                            const outputRuleID = row.id;
+                            fetch(`/api/rule/${outputRuleID}`, {
+                                method: 'DELETE'
+                            })
+                            .then(res => {
+                                if(res.status === 200){
+                                    if(window.confirm('Hủy thành công. \nNhấn đồng ý để load lại trang')){
+                                        window.location.reload()
+                                    }
+                                }else{
+                                    alert('Hủy thất bại');
                                 }
-                            }else{
-                                alert('Xóa thất bại');
-                            }
-                    })
-                    })
-                })
-                const btnUpdateSchedulers = document.querySelectorAll('.btnUpdateScheduler')
-                btnUpdateSchedulers.forEach((btnUpdateScheduler, index) => {
-                    btnUpdateScheduler.addEventListener('click', () => {
-                        const schedulerID = schedulers[index]._id
-                        window.location.href = `/chinhSuaThoiGian/${schedulerID}`
+                            })
+                        })
+                    
                     })
                 })
             })
-        </script>
-        <script>
-
         </script>
     </body>
 </html>

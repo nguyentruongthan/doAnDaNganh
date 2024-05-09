@@ -1,10 +1,11 @@
 import express from "express";
 import homeController from "../controllers/homeController";
-
+import authenticateToken from "../services/authMiddleware"
 
 
 let router = express.Router();
 let initWebRoutes = (app) => {
+  // router.get('/', authenticateToken, homeController.getHomePage);
   router.get('/', homeController.getHomePage);
   router.get('/dashBoard', homeController.getDashBoard);
   router.get('/api/devices', homeController.getDevices);
@@ -21,6 +22,9 @@ let initWebRoutes = (app) => {
   router.get('/caiDatThoiGian', homeController.getCaiDatThoiGian);
   router.get('/chinhSuaThoiGian/:schedulerID', homeController.getChinhSuaThoiGian);
   router.get('/dangNhap', homeController.getDangNhap);
+  router.get('/nguongCamBien', homeController.getNguongCamBien);
+  router.get('/caiDatNguongCamBien', homeController.getCaiDatNguongCamBien);
+  router.get('/chinhSuaNguongCamBien/:outputRuleID', homeController.getChinhSuaNguongCamBien);
   return app.use("/", router)
 }
 

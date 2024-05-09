@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!----======== CSS ======== -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+        />
+        <script
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+            integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+            crossorigin="anonymous"
+        ></script>
+        <!----===== Boxicons CSS ===== -->
+        <link
+            href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css"
+            rel="stylesheet"
+        />
+        <!-- gg icon -->
+
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+        />
+        <link href="/css/settime.css" rel="stylesheet" type="text/css">
+        <title>IOT FARM</title>
+    </head>
+    <body>
+        <nav class="sidebar close">
+            <header>
+                <div class="image-text">
+                    <span class="image">
+                        <img src="./img/01_logobachkhoasang 1.svg" alt="" />
+                    </span>
+
+                    <div class="text logo-text">
+                        <span class="name">Hệ thống</span>
+                        <span class="profession">Vườn thông minh</span>
+                    </div>
+                </div>
+
+                <i class="bx bx-chevron-right toggle"></i>
+            </header>
+
+            <div class="menu-bar">
+                <div class="menu">
+                    <li class="search-box">
+                        <i class="bx bx-search icon"></i>
+                        <input type="text" placeholder="Search..." />
+                    </li>
+
+                    <ul class="menu-link">
+                        <li class="nav-link">
+                            <a href="http://localhost:8080/dashBoard">
+                                <i class="bx bx-home-alt icon"></i>
+                                <span class="text nav-text"
+                                    >Điều khiển động cơ</span
+                                >
+                            </a>
+                        </li>
+
+                        <li class="nav-link">
+                            <a href="http://localhost:8080/nhietDo">
+                                <!-- <i class="bx bx-bar-chart-alt-2 icon"></i> -->
+                                <span class="material-symbols-outlined icon">
+                                    device_thermostat
+                                </span>
+                                <span class="text nav-text">Nhiệt độ</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-link">
+                            <a href="http://localhost:8080/doAmDat">
+                                <!-- <i class="bx bx-bell icon"></i> -->
+                                <span class="material-symbols-outlined icon">
+                                    humidity_mid
+                                </span>
+                                <span class="text nav-text">Độ ẩm đất</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-link">
+                            <a href="http://localhost:8080/doAmKhongKhi">
+                                <!-- <i class="bx bx-pie-chart-alt icon"></i> -->
+                                <span class="material-symbols-outlined icon">
+                                    humidity_percentage
+                                </span>
+                                <span class="text nav-text"
+                                    >Độ ẩm không khí</span
+                                >
+                            </a>
+                        </li>
+
+                        <li class="nav-link">
+                            <a href="http://localhost:8080/anhSang">
+                                <span class="material-symbols-outlined icon">
+                                    wb_sunny
+                                </span>
+                                <span class="text nav-text">Ánh sáng</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-link">
+                            <a href="http://localhost:8080/lapLich">
+                                <i class="bx bx-wallet icon"></i>
+                                <span class="text nav-text"
+                                    >Cài đặt thời gian</span
+                                >
+                            </a>
+                        </li>
+                        <li class="nav-link">
+                            <a href="/nguongCamBien">
+                                <i class="material-symbols-outlined icon">
+                                    rule_settings
+                                </i>
+                                <span class="text nav-text"
+                                    >Ngưỡng cảm biến</span
+                                >
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bottom-content">
+                    <li class="">
+                        <a href="#">
+                            <i class="bx bx-log-out icon"></i>
+                            <span class="text nav-text">Logout</span>
+                        </a>
+                    </li>
+
+                    <li class="mode">
+                        <div class="sun-moon">
+                            <i class="bx bx-moon icon moon"></i>
+                            <i class="bx bx-sun icon sun"></i>
+                        </div>
+                        <span class="mode-text text">Dark mode</span>
+
+                        <div class="toggle-switch">
+                            <span class="switch"></span>
+                        </div>
+                    </li>
+                </div>
+            </div>
+        </nav>
+        <!-- SECTION -->
+        <section class="home">
+            <div class="top">
+                <div></div>
+                <div class="d-flex align-items-center">
+                    <span>Vườn 1</span>
+                    <span class="material-symbols-outlined"> enable </span>
+                </div>
+                <div class="dropdown">
+                    <button
+                        class="btn btn-secondary btn-sm dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        <img src="./img/people.jpg" alt="" /> admin
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                        <li>
+                            <a class="dropdown-item active" href="#"
+                                >Thông tin cá nhân</a
+                            >
+                        </li>
+                        <li><a class="dropdown-item" href="#">Thông báo</a></li>
+                        <li>
+                            <a class="dropdown-item" href="#">Trạng thái</a>
+                        </li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="#">Đăng xuất</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Cài đặt thời gian -->
+            <div class="p-4">
+                <div class="text">Thiết lập điều kiện</div>
+                <div class="home-content">
+                    <div class="overview d-flex justify-content-end p-3 gap-5">
+                        <div
+                            class="title d-flex align-items-center justify-content-center"
+                        >
+                            <span class="material-symbols-outlined">
+                                rule_folder
+                            </span>
+                            <a href="/nguongCamBien"
+                                ><span class="sub-text icon">Điều kiện</span></a
+                            >
+                        </div>
+                        <div
+                            class="title d-flex align-items-center justify-content-center"
+                        >
+                            <span class="material-symbols-outlined">
+                                add_circle
+                            </span>
+                            <a href="/caiDatNguongCamBien"
+                                ><span class="sub-text icon"
+                                    >Chọn điều kiện</span
+                                ></a
+                            >
+                        </div>
+                    </div>
+                </div>
+                <div class="text">Động cơ phun sương</div>
+                <table class="table text-center">
+                    <thead class="table-primary jus">
+                        <tr>
+                            <th scope="col">Tên động cơ</th>
+                            <th scope="col">Nhiệt độ</th>
+                            <th scope="col">Độ ẩm không khí</th>
+                            <th scope="col">Độ ẩm đất</th>
+                            <th scope="col">Ánh sáng</th>
+                            <th scope="col">Thiết lập</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <select class="form-select outputDeviceSelect">
+                                    <option selected value="">Chọn động cơ</option>
+                                </select>
+                            </td>
+                            <td>
+                                <div
+                                    class="d-flex align-items-center justify-content-center tempInput"
+                                >
+                                    <select
+                                        class="form-select"
+                                        style="width: 80px"
+                                    >
+                                        <option selected value="">ĐK</option>
+                                        <option value="<"><</option>
+                                        <option value=">">></option>
+                                    </select>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="...°C"
+                                        style="width: 80px"
+                                    />
+                                </div>
+                            </td>
+                            <td>
+                                <div
+                                    class="d-flex align-items-center justify-content-center humiInput"
+                                >
+                                    <select
+                                        class="form-select"
+                                        style="width: 80px"
+                                    >
+                                        <option selected value="">ĐK</option>
+                                        <option value="<"><</option>
+                                        <option value=">">></option>
+                                    </select>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="...%"
+                                        style="width: 80px"
+                                    />
+                                </div>
+                            </td>
+                            <td>
+                                <div
+                                    class="d-flex align-items-center justify-content-center humiSoilInput"
+                                >
+                                    <select
+                                        class="form-select"
+                                        style="width: 80px"
+                                    >
+                                        <option selected value="">ĐK</option>
+                                        <option value="<"><</option>
+                                        <option value=">">></option>
+                                    </select>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="...%"
+                                        style="width: 80px"
+                                    />
+                                </div>
+                            </td>
+                            <td>
+                                <div
+                                    class="d-flex align-items-center justify-content-center lightInput"
+                                >
+                                    <select
+                                        class="form-select"
+                                        style="width: 80px"
+                                    >
+                                        <option selected value="">ĐK</option>
+                                        <option value="<"><</option>
+                                        <option value=">">></option>
+                                    </select>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="...Lux"
+                                        style="width: 80px"
+                                    />
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary btnSubmit">
+                                    Đặt
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <script>
+            const body = document.querySelector("body"),
+                sidebar = body.querySelector("nav"),
+                toggle = body.querySelector(".toggle"),
+                searchBtn = body.querySelector(".search-box"),
+                modeSwitch = body.querySelector(".toggle-switch"),
+                modeText = body.querySelector(".mode-text");
+
+            toggle.addEventListener("click", () => {
+                sidebar.classList.toggle("close");
+            });
+
+            searchBtn.addEventListener("click", () => {
+                sidebar.classList.remove("close");
+            });
+
+            modeSwitch.addEventListener("click", () => {
+                body.classList.toggle("dark");
+
+                if (body.classList.contains("dark")) {
+                    modeText.innerText = "Light mode";
+                } else {
+                    modeText.innerText = "Dark mode";
+                }
+            });
+        </script>
+        <script>//call api get devices
+            const devices = JSON.parse('<%- JSON.stringify(devices) %>');
+            const outputRule = JSON.parse('<%- JSON.stringify(outputRule) %>');
+            const sensorRules = JSON.parse('<%- JSON.stringify(sensorRules) %>');
+
+            console.log('devices', devices);
+            console.log('outputRule', outputRule);
+            console.log('sensorRules', sensorRules);
+
+            const outputDeviceSelectElement = document.querySelector('.outputDeviceSelect');
+            const devicesJson = {}
+            let lightID, humiSoilID, humiID, tempID;
+            devices.forEach(device => {
+                devicesJson[device._id] = device;
+                if(device.type === '0'){
+                    lightID = device._id;
+                }else if(device.type === '1'){
+                    humiSoilID = device._id;
+                }else if(device.type === '2'){
+                    humiID = device._id;
+                }else if(device.type === '3'){
+                    tempID = device._id;
+                }
+            })
+        </script>
+        <script>//update select output device
+            const selectDeviceElement = document.querySelector('.outputDeviceSelect');
+            let indexOutputDevice = 1;
+            let indexSelecedDevice = 0;
+            devices.forEach((device, index) => {
+                if(device.type === '4'){
+                    selectDeviceElement.innerHTML += 
+                      `
+                        <option value="${device._id}" >${device.deviceName}</option>
+                      `;
+                    
+                    if(device._id === outputRule.outputID){
+                      indexSelecedDevice = indexOutputDevice;
+                    }
+                  indexOutputDevice++;
+                }
+            })
+            selectDeviceElement.selectedIndex = indexSelecedDevice;
+            selectDeviceElement.addEventListener('change', (e) => {
+                outputRule.outputID = e.target.value;
+            })
+
+        </script>
+        <script>//update default data for form update
+            //light sensor
+            const lightInput = document.querySelector('.lightInput');
+
+            const humiSoilInput = document.querySelector('.humiSoilInput');
+            const humiInput = document.querySelector('.humiInput');
+            const tempInput = document.querySelector('.tempInput');
+            sensorRules.forEach((sensorRule, index) => {
+                const sensor = devicesJson[sensorRule.sensorID];
+                if(sensor.type === '0'){
+                    lightInput.querySelector('select').value = sensorRule.condition;
+                    lightInput.querySelector('input').value = sensorRule.threshold;
+                }else if(sensor.type === '1'){
+                    humiSoilInput.querySelector('select').value = sensorRule.condition;
+                    humiSoilInput.querySelector('input').value = sensorRule.threshold;
+                }else if(sensor.type === '2'){
+                    humiInput.querySelector('select').value = sensorRule.condition;
+                    humiInput.querySelector('input').value = sensorRule.threshold;
+                }else if(sensor.type === '3'){
+                    tempInput.querySelector('select').value = sensorRule.condition;
+                    tempInput.querySelector('input').value = sensorRule.threshold;
+                }
+            })
+
+        </script>
+        <script>//handle submit
+            const btnSubmit = document.querySelector('.btnSubmit');
+            btnSubmit.addEventListener('click', async (e) => {
+                e.preventDefault();
+
+                const lightCondition = lightInput.querySelector('select').value;
+                const lightThreshold = lightInput.querySelector('input').value;
+
+                const humiSoilCondition = humiSoilInput.querySelector('select').value;
+                const humiSoilThreshold = humiSoilInput.querySelector('input').value;
+
+                const humiCondition = humiInput.querySelector('select').value;
+                const humiThreshold = humiInput.querySelector('input').value;
+
+                const tempCondition = tempInput.querySelector('select').value;
+                const tempThreshold = tempInput.querySelector('input').value;
+
+                if(!outputRule.outputID){
+                    alert('Vui lòng chọn động cơ');
+                    return;
+                }
+                sensorRules.forEach((sensorRule) => {
+                    const sensor = devicesJson[sensorRule.sensorID];
+                    if(sensor.type === '0'){//light sensor
+                        sensorRule.condition = lightCondition;
+                        sensorRule.threshold = lightThreshold;
+                    }else if(sensor.type === '1'){//humiSoil sensor
+                        sensorRule.condition = humiSoilCondition;
+                        sensorRule.threshold = humiSoilThreshold;
+                    }else if(sensor.type === '2'){//humi sensor
+                        sensorRule.condition = humiCondition;
+                        sensorRule.threshold = humiThreshold;
+                    }else if(sensor.type === '3'){//temp sensor
+                        sensorRule.condition = tempCondition;
+                        sensorRule.threshold = tempThreshold;
+                    }
+                })
+                
+                // console.log('outputRule', outputRule);
+                // console.log('sensorRules', sensorRules);
+                await fetch('http://localhost:8080/api/rule/',{
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        'outputRule': outputRule,
+                        'sensorRules': sensorRules
+                    }),
+                    
+                })
+                .then(res => {
+                    if(res.status === 200){
+                        if(window.confirm('Thiết lập thành công.\n Nhấn đồng ý để quay lai trang ngưỡng cảm biến')){
+                            window.location.href = '/nguongCamBien';
+                        };
+                    }
+                    else{
+                        alert('Thiết lập thất bại');
+                    }
+                })
+
+            })
+
+        </script>
+    </body>
+</html>

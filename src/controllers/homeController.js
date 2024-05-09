@@ -7,7 +7,7 @@ import eventService from '../services/eventService';
 import activityLogService from '../services/activityLogService';
 import schedulerService from '../services/schedulerService';
 // import updateSensor from "../services/updateSensor"; 
-
+import ruleService from '../services/ruleService';
 
 function decodeDeviceNametoNumber(nameDevice) {
   switch (nameDevice) {
@@ -355,6 +355,46 @@ const getDangNhap = async (req, res) => {
   return res.render('dangNhap.ejs');
 }
 
+const getNguongCamBien = async (req, res) => {
+  //get all device by username
+  const username = 'nguyentruongthan';
+  const devices = await deviceService.getAllDevicesByUsername(username);
+
+  return res.render(
+    'nguongCamBien.ejs',
+    { devices: devices }
+  );
+}
+const getCaiDatNguongCamBien = async (req, res) => {
+  //get all device by username
+  const username = 'nguyentruongthan';
+  const devices = await deviceService.getAllDevicesByUsername(username);
+
+  return res.render(
+    'caiDatNguongCamBien.ejs',
+    { devices: devices }
+  );
+}
+const getChinhSuaNguongCamBien = async (req, res) => {
+  // get all device by username
+  const username = 'nguyentruongthan';
+  const devices = await deviceService.getAllDevicesByUsername(username);
+  // get outputRule by outputRuleID
+  const outputRuleID = req.params.outputRuleID;
+  const outputRule = await ruleService.getOutputRuleByOutputRuleID(outputRuleID);
+  // get sensorRule by outputRuleID
+  const sensorRules = await ruleService.getSensorRuleByOutputRuleID(outputRuleID);
+  return res.render(
+    'chinhSuaNguongCamBien.ejs',
+    {
+      devices: devices,
+      outputRule: outputRule,
+      sensorRules: sensorRules
+    }
+  );
+}
+
+
 module.exports = {
   getHomePage: getHomePage,
   getDashBoard: getDashBoard,
@@ -371,5 +411,8 @@ module.exports = {
   getLapLich: getLapLich,
   getCaiDatThoiGian: getCaiDatThoiGian,
   getChinhSuaThoiGian: getChinhSuaThoiGian,
-  getDangNhap: getDangNhap
+  getDangNhap: getDangNhap,
+  getNguongCamBien: getNguongCamBien,
+  getCaiDatNguongCamBien: getCaiDatNguongCamBien,
+  getChinhSuaNguongCamBien: getChinhSuaNguongCamBien
 }
