@@ -60,14 +60,14 @@
                         <div class="input-group mb-3">
                             <input
                                 type="text"
-                                class="form-control form-control-lg bg-light fs-6"
+                                class="form-control form-control-lg bg-light fs-6 username"
                                 placeholder="Username"
                             />
                         </div>
                         <div class="input-group mb-1">
                             <input
                                 type="password"
-                                class="form-control form-control-lg bg-light fs-6"
+                                class="form-control form-control-lg bg-light fs-6 password"
                                 placeholder="password"
                             />
                         </div>
@@ -92,8 +92,8 @@
                         </div>
                         <div class="input-group mb-3">
                             <a href="/index.html"
-                                ><button
-                                    class="btn btn-lg btn-primary w-100 fs-6"
+                                ><button 
+                                    class="btn btn-lg btn-primary w-100 fs-6 btnLogin"
                                 >
                                     Login
                                 </button></a
@@ -112,4 +112,31 @@
             </div>
         </div>
     </body>
+    <script>
+        const btnLogin = document.querySelector('.btnLogin');
+        btnLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            const username = document.querySelector('.username').value;
+            const password = document.querySelector('.password').value;
+            console.log('login')
+            console.log(username, password)
+            fetch(`http://localhost:8080/api/user/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    'username': username,
+                    'password': password,
+                }),
+            })
+            .then(res => {
+                if(res.status === 200){
+                    window.location.href = '/dashBoard';
+                }else{
+                    alert('Login fail')
+                }
+            })
+        })
+    </script>
 </html>

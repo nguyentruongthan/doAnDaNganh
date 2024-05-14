@@ -173,7 +173,13 @@
             <!-- Dieu khien -->
             
             <div class="text">
-                <span>Biểu đồ nhiệt độ vườn</span>
+                <div class="d-flex justify-content-between">
+                    <div class="col-6">Biểu đồ nhiệt độ vườn</div>
+                    <input 
+                        type="date" id="datepicker" 
+                        style="width: 200px; padding: 10px; border-radius: 10px; font-size: 14px;" 
+                    />
+                </div>
                 <div class="container">
                     <div class = "temp">
                             <div class = "infor1"> Nhiệt độ hiện tại</div>
@@ -198,7 +204,22 @@
                     </div>
                 </div>
             </div>
-
+            <table class="table" style="margin: 20px;">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Thời gian</th>
+                    <th scope="col">Giá trị</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                  </tr> -->
+                </tbody>
+              </table>
         </section>
       <script>
           const body = document.querySelector("body"),
@@ -241,7 +262,7 @@
           .then((result) => {
             tempElenment.style.setProperty('--value', parseInt(result.value));
           });
-        const username = "nguyentruongthan";
+          const username = JSON.parse('<%- JSON.stringify(username) %>');
       </script>
       <script>//call api get hourly chart
         const barsContainer = document.querySelector('.bars');
@@ -290,7 +311,22 @@
                 }
             });
           });
-
+          fetch(`http://localhost:8080/api/activitylog/${device._id}/${currentMonth}-${currentDateOfMonth}-${currentYear}`,{
+                    method: "GET"
+                }).then((res) => res.json())
+                .then((result) => {
+                    const tbodyElement = document.querySelector('tbody');
+                    tbodyElement.innerHTML = "";
+                    result.forEach((log, index) => {
+                        tbodyElement.innerHTML += `
+                            <tr>
+                                <th scope="row">${index + 1}</th>
+                                <td>${log.timestamp}</td>
+                                <td>${log.value}</td>
+                            </tr>
+                        `
+                    })
+                }) 
       </script>
       <script src="socket.io/socket.io.js"></script>
       <script>// socketIO
@@ -316,5 +352,84 @@
               }
           })
       </script>
+      <script>//call api get value of day
+        
+        fetch(`http://localhost:8080/api/activitylog/${device._id}/${currentMonth}-${currentDateOfMonth}-${currentYear}`,{
+            method: "GET"
+        }).then((res) => res.json())
+        .then((result) => {
+            const tbodyElement = document.querySelector('tbody');
+            console.log(result);
+        }) 
+    </script>
+    <script>
+        const datePicker = document.querySelector("#datepicker");
+        datePicker.value = new Date().toISOString().split('T')[0];
+        datePicker.addEventListener('change', async (e) => {
+            console.log(e.target.value);
+            const year = e.target.value.split('-')[0];
+            const month = e.target.value.split('-')[1];
+            const date = e.target.value.split('-')[2];
+            
+            await fetch(`http://localhost:8080/api/activitylog/${device._id}/${month}-${date}-${year}`,{
+                method: "GET"
+            }).then((res) => res.json())
+            .then((result) => {
+                const tbodyElement = document.querySelector('tbody');
+                tbodyElement.innerHTML = "";
+                result.forEach((log, index) => {
+                    tbodyElement.innerHTML += `
+                        <tr>
+                            <th scope="row">${index + 1}</th>
+                            <td>${log.timestamp}</td>
+                            <td>${log.value}</td>
+                        </tr>
+                    `
+                })
+            }) 
+
+            await fetch(
+              `http://localhost:8080/api/activitylog/${device._id}/${month}-${date}-${year}/hourly`,
+              {method: "GET"}
+            )
+            .then((res) => {
+                console.log(res);
+                if(res.ok){
+                return res.json()
+                }else{
+                return new Array(11).fill(null);
+                }
+            }).then((result) => {
+                // console.log(result);
+                return result;
+            })
+            .then((result) => {
+                barsContainer.innerHTML = ""
+                result.forEach((log, index) => {
+                let bar = "";
+                if(!log) {
+                    bar = `
+                    <li><div class = "bar" data-percentage= "0"></div><span> ${index*2}:00</span></li>
+                    `
+                }else{
+                    bar = ` 
+                    <li><div class = "bar" data-percentage= "${log.value}"></div><span> ${index*2}:00</span></li>
+                    `
+                }
+                barsContainer.innerHTML += bar;
+                })
+                var bars = document.querySelectorAll('.bars li .bar');
+                bars.forEach(function(bar) {
+                    var percentage = parseFloat(bar.getAttribute('data-percentage'));
+                    if (percentage > 0) { // Check if percentage is greater than 0
+                        var height = (percentage) * 7;
+                        bar.style.height = height + 'px';
+                    } else {
+                        bar.style.display = 'none'; // Hide the bar if percentage is 0
+                    }
+                });
+            });
+        })
+    </script>
     </body>
 </html>

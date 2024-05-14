@@ -6,7 +6,13 @@ import constant from '../services/constant.js';
 import mqttService from '../services/mqttService.js';
 const addScheduler = async (req, res) => {
   try {
-    const username = 'nguyentruongthan';
+    const cookies = req.cookies;
+    if (cookies.token == null) {
+      return res.redirect('/dangNhap');
+    }
+    const token = cookies.token;
+    const decodeToken = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    const username = decodeToken.username;
     const outputDevice = await outputDeviceModel.OutputDevice.exists({ deviceID: req.body.outputID });
     if (!outputDevice) {
       return res.status(400).json({ error: "Invalid outputID" });
@@ -35,7 +41,13 @@ const getAllSchedulersByOutputID = async (req, res) => {
 
 const updateSchedulerByID = async (req, res) => {
   try {
-    const username = 'nguyentruongthan';
+    const cookies = req.cookies;
+    if (cookies.token == null) {
+      return res.redirect('/dangNhap');
+    }
+    const token = cookies.token;
+    const decodeToken = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    const username = decodeToken.username;
     const schedulerID = req.params.schedulerID;
     //find by schedulerID
     const scheduler = await schedulerModel.Scheduler.findById(schedulerID);
@@ -76,7 +88,13 @@ const getSchedulerByID = async (req, res) => {
 
 const deleteSchedulerByID = async (req, res) => {
   try {
-    const username = 'nguyentruongthan';
+    const cookies = req.cookies;
+    if (cookies.token == null) {
+      return res.redirect('/dangNhap');
+    }
+    const token = cookies.token;
+    const decodeToken = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    const username = decodeToken.username;
     const schedulerID = req.params.schedulerID;
     const scheduler = await schedulerModel.Scheduler.findByIdAndDelete(schedulerID);
     if (!scheduler) {

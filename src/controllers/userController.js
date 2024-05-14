@@ -31,7 +31,7 @@ const addUser = async (req, res) => {
       deviceName: "Nhiệt độ",
       username: req.body.username
     });
-    
+    res.status(200).json(saveUser);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -50,7 +50,7 @@ const loginUser = async (req, res) => {
     }
     const token = jwt.sign({ username: user.username }, 'your_secret_key', { expiresIn: '1h' });
     res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
-    return res.status.json({ message: 'Login successfully!' });
+    return res.status(200).json({ message: 'Login successfully!' });
     // res.status(200).json(user);
   } catch (err) {
     res.status(500).json(err);
@@ -67,7 +67,13 @@ const getIsAuto = async (req, res) => {
 }
 const updateIsAuto = async (req, res) => {
   try {
-    const username = 'nguyentruongthan'
+    const cookies = req.cookies;
+    if (cookies.token == null) {
+      return res.redirect('/dangNhap');
+    }
+    const token = cookies.token;
+    const decodeToken = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    const username = decodeToken.username;
     const user = await userModel.User.findOne({ username: req.params.username });
     user.isAuto = req.body.isAuto;
     await user.updateOne({
@@ -80,9 +86,17 @@ const updateIsAuto = async (req, res) => {
     return res.status(500).json(err);
   }
 }
+const logoutUser = async (req, res) => {
+  console.log('logout')
+  res.clearCookie('token');
+  // return res.redirect('/api/user/login');
+  return res.status(200).json({ message: 'Logout successfully!' });
+
+}
 module.exports = {
   addUser: addUser,
   loginUser: loginUser,
   getIsAuto: getIsAuto,
-  updateIsAuto: updateIsAuto
+  updateIsAuto: updateIsAuto,
+  logoutUser: logoutUser
 };

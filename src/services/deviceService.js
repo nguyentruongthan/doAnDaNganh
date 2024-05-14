@@ -1,14 +1,7 @@
-// import mqttService from './mqttService';
 import constant from './constant';
 import deviceModel from '../models/device';
 import sensorModel from '../models/sensor';
 import outputDeviceModel from '../models/outputDevice';
-//control device
-
-const controlDevice = async (username, gardenID, typeDevice, pin, value) => {
-  console.log("Control device: ", username, gardenID, typeDevice, pin, value);
-  // mqttService.publish(gardenID, `${constant.HEADER_CONTROL_DEVICE}:${typeDevice}:${pin}:${value}`);
-}
 
 const getAllDevicesByUsername = async (username) => {
   try {
@@ -68,7 +61,6 @@ const getDevicesByUsernameAndType = async (username, type) => {
 }
 
 module.exports = {
-  controlDevice: controlDevice,
   getAllDevicesByUsername: getAllDevicesByUsername,
   addDevice: addDevice,
   getDeviceByID: getDeviceByID,

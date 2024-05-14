@@ -1,19 +1,8 @@
-import ruleModel from '../models/rule.js';
 // import outputDeviceModel from '../models/outputDevice.js';
 import ruleService from '../services/ruleService.js';
 import mqttService from '../services/mqttService.js';
 import constant from '../services/constant.js';
 
-const addRule = async (req, res) => {
-  try {
-    const newRule = new ruleModel.Rule(req.body);
-    const saveRule = await newRule.save();
-
-    res.status(200).json(saveRule);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-}
 
 const getAllRulesByOutputID = async (req, res) => {
   try {
@@ -27,7 +16,13 @@ const getAllRulesByOutputID = async (req, res) => {
 
 const updateRuleByOutputRuleID = async (req, res) => {
   try {
-    const username = 'nguyentruongthan'
+    const cookies = req.cookies;
+    if (cookies.token == null) {
+      return res.redirect('/dangNhap');
+    }
+    const token = cookies.token;
+    const decodeToken = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    const username = decodeToken.username;
     const outputRuleReq = req.body['outputRule'];
     const sensorRulesReq = req.body['sensorRules'];
     
@@ -79,7 +74,13 @@ const getRuleByID = async (req, res) => {
 
 const deleteRuleByOutputRuleID = async (req, res) => {
   try {
-    const username = "nguyentruongthan";
+    const cookies = req.cookies;
+    if (cookies.token == null) {
+      return res.redirect('/dangNhap');
+    }
+    const token = cookies.token;
+    const decodeToken = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    const username = decodeToken.username;
     const deleteOutputRule = await ruleService.deleteRuleByOutputRuleID(req.params.outputRuleID);
     mqttService.publish(username, `${constant.HEADER_DELETE_RULE}:${deleteOutputRule._id}`);
     res.status(200).json(deleteOutputRule);
@@ -90,7 +91,13 @@ const deleteRuleByOutputRuleID = async (req, res) => {
 
 const addRules = async (req, res) => {
   try {
-    const username = 'nguyentruongthan';
+    const cookies = req.cookies;
+    if (cookies.token == null) {
+      return res.redirect('/dangNhap');
+    }
+    const token = cookies.token;
+    const decodeToken = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    const username = decodeToken.username;
     const outputID = req.body['outputID'];
     const action = req.body['action'];
     const sensorRules = req.body['sensorRules'];
@@ -121,7 +128,6 @@ const getSensorRuleByOutputRuleID = async (req, res) => {
 
 }
 module.exports = {
-  addRule: addRule,
   getAllRulesByOutputID: getAllRulesByOutputID,
   deleteRuleByOutputRuleID: deleteRuleByOutputRuleID,
   updateRuleByOutputRuleID: updateRuleByOutputRuleID,

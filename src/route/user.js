@@ -6,4 +6,5 @@ userRouter.post('/', userController.addUser);
 userRouter.post('/login', userController.loginUser);
 userRouter.get('/isAuto/:username', userController.getIsAuto);
 userRouter.put('/isAuto/:username', userController.updateIsAuto);
+userRouter.get('/logout', userController.logoutUser);
 export default userRouter;

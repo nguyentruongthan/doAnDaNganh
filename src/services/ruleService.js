@@ -9,18 +9,14 @@ const getAllRulesByOutputID = async (outputID) => {
     const rules = [];
     for (let i = 0; i < outputRules.length; i++) {
       const outputRule = outputRules[i];
-      // console.log('---------outputRule: ', outputRule);
       const sensorRules = await sensorRuleModel.SensorRule.find({
         outputRuleID: outputRule._id
       })
-      // console.log('sensorRules: ', sensorRules);
       rules.push({
         'outputRule': outputRule,
         'sensorRules': sensorRules
       });
-      // console.log('----------------');
     }
-    // console.log('rules: ', rules);
     return rules;
   } catch (err) {
     return err;
@@ -57,7 +53,6 @@ const addRules = async (outputID, action, sensorRules) => {
 
 const getOutputRuleByOutputRuleID = async (outputRuleID) => {
   try {
-    // console.log('outputRuleID: ', outputRuleID);
     const outputRule = await outputRuleModel.OutputRule.findById(outputRuleID);
     return outputRule;
   } catch (err) {

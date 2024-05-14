@@ -1,19 +1,24 @@
 import jwt from 'jsonwebtoken';
 
 const authenticateToken = (req, res, next) => {
-    const token = req.cookies.token;
+	if (req.cookies) {
+		console.log(req.cookies)
+	} else {
+		return res.status(403).json({ message: 'Invalid Token ' });
+	}
+	const token = req.cookies.token;
 
     if (!token) {
-      return res.status(401).json({ message: 'Unauthorized' });
+		return res.status(401).json({ message: 'Unauthorized' });
     }
 
     jwt.verify(token, 'your_secret_key', (err, user) => {
-      if (err) {
-        return res.status(403).json({ message: 'Invalid Token ' });
-      }
+		if (err) {
+			return res.status(403).json({ message: 'Invalid Token ' });
+		}
 
-      req.user = user;
-      next();
+		req.user = user;
+		next();
     });
 };
 

@@ -276,7 +276,7 @@
             const devices = JSON.parse('<%- JSON.stringify(data) %>');
         </script>
         <script> //call api get all scheduler by user name
-            const username = 'nguyentruongthan'
+            const username = JSON.parse('<%- JSON.stringify(username) %>');
             fetch(`http://localhost:8080/api/scheduler/username/${username}`)
             .then(res => res.json())
             .then(schedulers => {

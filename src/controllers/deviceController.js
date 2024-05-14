@@ -7,9 +7,15 @@ import mqttService from '../services/mqttService.js';
 
 const addDevice = async (req, res) => {
   try {
-    
+    const cookies = req.cookies;
+    if (cookies.token == null) {
+      return res.redirect('/dangNhap');
+    }
+    const token = cookies.token;
+    const decodeToken = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    const username = decodeToken.username;
     const result = await deviceService.addDevice(req.body);
-    mqttService.publish('nguyentruongthan', `${constants.HEADER_CREATE}:${JSON.stringify(result.device)}`);
+    mqttService.publish(username, `${constants.HEADER_CREATE}:${JSON.stringify(result.device)}`);
     return res.status(200).json(result);
   } catch (err) {
     res.status(500).json(err);
@@ -58,6 +64,13 @@ const getDeviceByID = async (req, res) => {
 }
 const deleteDeviceByID = async (req, res) => {
   try {
+    const cookies = req.cookies;
+    if (cookies.token == null) {
+      return res.redirect('/dangNhap');
+    }
+    const token = cookies.token;
+    const decodeToken = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    const username = decodeToken.username;
     const deviceID = req.params.deviceID;
     //find by deviceID
     const device = await deviceModel.Device.findById(deviceID);
@@ -79,6 +92,8 @@ const deleteDeviceByID = async (req, res) => {
         deviceID: deviceID
       })
     }
+    //call mqtt to delete device
+    mqttService.publish(username, `${constants.HEADER_DELETE}:${deviceID}`);
     return res.status(200).json("Delete device successfully");
   } catch (err) {
     res.status(500).json(err);

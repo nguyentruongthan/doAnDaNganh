@@ -2,7 +2,6 @@ import ruleController from '../controllers/ruleController.js';
 import express from "express";
 
 const ruleRouter = express.Router();
-ruleRouter.post('/', ruleController.addRule);
 ruleRouter.post('/addRules', ruleController.addRules);
 ruleRouter.get('/all/:outputID', ruleController.getAllRulesByOutputID);
 ruleRouter.put('/', ruleController.updateRuleByOutputRuleID); // as well as sensor rules

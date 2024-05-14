@@ -163,7 +163,7 @@
                         <li><a class="dropdown-item" href="#">Thông báo</a></li>
                         <li><a class="dropdown-item" href="#">Trạng thái</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Đăng xuất</a></li>
+                        <li><a class="dropdown-item btnLogout" href="/dangNhap">Đăng xuất</a></li>
                     </ul>
                 </div>
             </div>
@@ -193,6 +193,7 @@
                             <th scope="col">Tên động cơ</th>
                             <th scope="col">Pin</th>
                             <th scope="col">Công tắc thiết bị</th>
+                            <th scope="col">Thiết lập</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -253,7 +254,7 @@
             const sensorsContainer = document.querySelector(".overview");
             const outputDevicesTable = document.querySelector(".table tbody");
             //example for username and garden
-            const username = "nguyentruongthan";
+            const username = JSON.parse('<%- JSON.stringify(username) %>');
 
             const reloadContainer = document.querySelector(".reloadContainer");
         </script>
@@ -341,6 +342,7 @@
                                 <input class='form-check-input outputDevice value' type='checkbox' role='switch' />
                             </div>
                         </td>
+                        <td><button class='btn btn-danger btnDeleteOuputDevice'>Xóa</button></td>
                     </tr>
                 `
             }
@@ -350,6 +352,7 @@
                 outputDevicesTable.innerHTML += 
                     outputDeviceComponent(indexOutputDevice++, device._id, device.deviceName, device.pin);
             });
+
             const outputDevices = document.querySelectorAll(".outputDevice");
             outputDevices.forEach((outputDevice) => {
                 outputDevice.addEventListener('click', async (e) => {
@@ -383,6 +386,30 @@
                             clearTimeout(timeout);
                         }else {
                             throw new Error('Network response was not ok.');
+                        }
+                    }catch(err){
+                        console.log(err);
+                    }
+                })
+            })
+        </script>
+        <script>//handle delete device
+            const btnDeleteOutputDevices = document.querySelectorAll('.btnDeleteOuputDevice');
+            btnDeleteOutputDevices.forEach((btnDeleteOutputDevice) => {
+                btnDeleteOutputDevice.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const deviceID = e.target.parentNode.parentNode.id;
+                    // console.log(deviceID);
+                    try{
+                        const res = await fetch(`http://localhost:8080/api/device/${deviceID}`, {
+                            method: 'DELETE',
+                        });
+                        if(res.ok){
+                            if(window.confirm('Xóa thiết bị thành công. \n Nhấn đồng ý để reload lại trang')){
+                                window.location.reload();
+                            }
+                        }else{
+                            alert('Xóa thiết bị thất bại');
                         }
                     }catch(err){
                         console.log(err);
@@ -555,6 +582,22 @@
                     }
                 })
 
+            })
+        </script>
+        <script>//log out
+            const btnLogout = document.querySelector('.btnLogout');
+            btnLogout.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                fetch('http://localhost:8080/api/user/logout', {
+                    method: 'GET',
+                }).then(res => {
+                    if(res.status === 200){
+                        window.location.href = '/dangNhap';
+                    }else{
+                        alert('Logout fail');
+                    }
+                })
             })
         </script>
     </body>

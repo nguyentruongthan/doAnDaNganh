@@ -1,18 +1,23 @@
 import express from "express";
 import bodyParser from "body-parser";
 import viewEngine from "./config/viewEngine";
-import initWebRoutes from "./route/web";
 import cors from 'cors';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import SocketServices from './services/socketIOService';
 import MQTTClient from './controllers/mqttClientController';
 import mongoose from 'mongoose';
+
+//import route
+import pageRouter from "./route/page";
 import userRouter from './route/user';
 import deviceRouter from './route/device';
-import LogRouter from './route/activityLog';
+import activityLogRouter from './route/activityLog';
 import schedulerRouter from './route/scheduler';
 import ruleRouter from './route/rule';
+
+import cookieParser from "cookie-parser";
+
 require("dotenv").config();
 
 let app = express();
@@ -26,17 +31,17 @@ const io = new Server(server, {
 global._io = io;
 //config app
 
-
+app.use(cookieParser())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/public/', express.static('./public'));
 
 app.use(cors());
 
-initWebRoutes(app);
+app.use("/", pageRouter);
 app.use("/api/user", userRouter);
 app.use("/api/device", deviceRouter);
-app.use("/api/activityLog", LogRouter);
+app.use("/api/activityLog", activityLogRouter);
 app.use("/api/scheduler", schedulerRouter);
 app.use("/api/rule", ruleRouter);	
 viewEngine(app);
